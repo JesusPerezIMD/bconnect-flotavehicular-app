@@ -1,0 +1,10 @@
+﻿################################################################################
+# Este archivo .gitignore ha sido creado automáticamente por Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/bconnect_formulario_app/FileContentIndex
+/.vs/slnx.sqlite
+/.vs/bconnect_formulario_app/v17/Browse.VC.db
+*.db-shm
+*.db-wal
+*.opendb
