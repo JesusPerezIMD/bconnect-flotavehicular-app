@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:bconnect_formulario/components/navigation_bar_component.dart';
 import 'package:bconnect_formulario/env.dart';
+import 'package:bconnect_formulario/models/getSolicitud.dart';
 import 'package:flutter/material.dart';
 import 'package:bconnect_formulario/app_route.dart';
 import 'package:bconnect_formulario/helpers/preferences_helper.dart';
@@ -36,8 +37,8 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
   String selectedEstatus = 'Todos';
   
   
-  Capacitacion? oencuesta;
-  List<Capacitacion> encuestas = [];
+  getSolicitud? oencuesta;
+  List<getSolicitud> encuestas = [];
   String? userid = '';
   String serviceName=Environment().SERVICE_NAME;
   String codemp ='';
@@ -53,7 +54,7 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
   }
 
   Future<void> getForms(String division) async {
-    var result = await BConnectService().getForms(division, serviceName);
+    var result = await BConnectService().getForms(division);
     if (mounted) {
       setState(() {
         if (result.isNotEmpty) {
@@ -280,7 +281,7 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
         ? encuestas.map((item) {
             return DropdownMenuItem(
               value: item,
-              child: Text(item.bc_nombre.toString()),
+              child: Text(item.bc_folio.toString()),
             );
           }).toList()
         : [const DropdownMenuItem(

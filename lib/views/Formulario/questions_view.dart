@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../components/components.dart';
+import '../../models/models.dart';
 
 class QuestionsView extends StatefulWidget {
+  final List<Catalogos> catalogos;
+  final String bc_asignacionvehiculoid;
+
+  QuestionsView({required this.catalogos, required this.bc_asignacionvehiculoid});
+
   @override
   _QuestionsViewState createState() => _QuestionsViewState();
 }
@@ -74,7 +80,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Nombre del DH responsable de la solicitud*",
             value: selectedDH,
-            items: dhResponsables,
+            items: (widget.catalogos[0].empresaNominista ?? [])
+                .where((empresa) => empresa.bc_nombre != null)
+                .map((empresa) => empresa.bc_nombre!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedDH = value;
@@ -83,19 +92,12 @@ Widget build(BuildContext context) {
           ),
           CustomDividerComponent(text: "Datos generales del ejecutivo"),
           CustomDropdownFormField(
-            hintText: "Nombre del DH responsable de la solicitud*",
-            value: selectedDH,
-            items: dhResponsables,
-            onChanged: (value) {
-              setState(() {
-                selectedDH = value;
-              });
-            },
-          ),
-          CustomDropdownFormField(
             hintText: "Empresa donde nomina",
             value: selectedEmpresaNomina,
-            items: empresasNomina,
+            items: (widget.catalogos[0].empresaNominista ?? [])
+                .where((empresa) => empresa.bc_nombre != null)
+                .map((empresa) => empresa.bc_nombre!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedEmpresaNomina = value;
@@ -105,7 +107,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Empresa donde presta servicios",
             value: selectedEmpresaServicios,
-            items: empresasServicios,
+            items: (widget.catalogos[0].empresaNominista ?? [])
+                .where((empresa) => empresa.bc_nombre != null)
+                .map((empresa) => empresa.bc_nombre!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedEmpresaServicios = value;
@@ -115,7 +120,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Tipo de Nomina",
             value: selectedTipoNomina,
-            items: tiposNomina,
+            items: (widget.catalogos[0].tipoNomina ?? [])
+                .where((tipoN) => tipoN.bc_name != null)
+                .map((tipoN) => tipoN.bc_name!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedTipoNomina = value;
@@ -125,7 +133,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Departamento",
             value: selectedDepartamento,
-            items: departamentos,
+            items: (widget.catalogos[0].departamento ?? [])
+                .where((depa) => depa.bc_name != null)
+                .map((depa) => depa.bc_name!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedDepartamento = value;
@@ -135,7 +146,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Sucursal Nominal",
             value: selectedSucursalNominal,
-            items: sucursalesNominales,
+            items: (widget.catalogos[0].sucursalNominal ?? [])
+                .where((sn) => sn.bc_name != null)
+                .map((sn) => sn.bc_name!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedSucursalNominal = value;
@@ -145,7 +159,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Puesto Asignado",
             value: selectedPuestoAsignado,
-            items: puestosAsignados,
+            items: (widget.catalogos[0].puestoAsignado ?? [])
+                .where((pa) => pa.bc_name != null)
+                .map((pa) => pa.bc_name!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedPuestoAsignado = value;
@@ -156,7 +173,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Sucursal AX",
             value: selectedSucursalAX,
-            items: sucursalesAX,
+            items:  (widget.catalogos[0].sucursalAX ?? [])
+                .where((sucurAX) => sucurAX.bc_name != null)
+                .map((sucurAX) => sucurAX.bc_name!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedSucursalAX = value;
@@ -167,7 +187,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Departamento AX",
             value: selectedDepartamentoAX,
-            items: departamentosAX,
+            items:  (widget.catalogos[0].departamentoAX ?? [])
+                .where((depaAX) => depaAX.bc_name != null)
+                .map((depaAX) => depaAX.bc_name!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedDepartamentoAX = value;
@@ -178,7 +201,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Linea de Producción AX",
             value: selectedLineaProduccionAX,
-            items: lineasProduccionAX,
+            items:  (widget.catalogos[0].lineaProduccionAX ?? [])
+                .where((lineaAX) => lineaAX.bc_name != null)
+                .map((lineaAX) => lineaAX.bc_name!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedLineaProduccionAX = value;
@@ -189,7 +215,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Area AX",
             value: selectedAreaAX,
-            items: areasAX,
+            items:  (widget.catalogos[0].areaAX ?? [])
+                .where((arAX) => arAX.bc_name != null)
+                .map((arAX) => arAX.bc_name!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedAreaAX = value;
@@ -200,7 +229,10 @@ Widget build(BuildContext context) {
           CustomDropdownFormField(
             hintText: "Centro de Costos AX",
             value: selectedCentroCostosAX,
-            items: centrosCostosAX,
+            items:  (widget.catalogos[0].centroCostosAX ?? [])
+                .where((centroAX) => centroAX.bc_name != null)
+                .map((centroAX) => centroAX.bc_name!)
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedCentroCostosAX = value;
@@ -208,7 +240,7 @@ Widget build(BuildContext context) {
             },
           ),
 
-        ],
+          ],
       ),
     );
   }

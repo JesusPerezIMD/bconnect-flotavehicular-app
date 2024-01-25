@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:bconnect_formulario/env.dart';
-import 'package:bconnect_formulario/models/models.dart';
+import '../../models/models.dart';
 import 'package:http/http.dart' as http;
-import '../models/response_capacitaciondnc.dart';
 import '../models/response_capacitacion.dart';
 
 class BConnectService {
@@ -132,21 +131,39 @@ class BConnectService {
     }
   }
 
-  Future<List<Capacitacion>> getForms(String userid,String serviceName) async {
+  Future<List<getSolicitud>> getForms(String userid) async {
     try {
-      List<Capacitacion> capacitacion = [];
+      List<getSolicitud> solicitudList = [];
       final response = await http.get(
-          Uri.parse('$apiUrl/Encuestas/getEncuestasbyDivService?userid=$userid&serviceName=$serviceName'),
+          Uri.parse('$apiUrl/FlotaVehicular/getSolicitud?empCode=$userid'),
           headers: {'Content-Type': 'application/json; charset=UTF-8'});
       if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
+        final List<dynamic> result = jsonDecode(response.body);
         for (var data in result) {
-          capacitacion.add(Capacitacion.fromJson(data));
+          solicitudList.add(getSolicitud.fromJson(data));
         }
       }
-      return capacitacion;
+      return solicitudList;
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  Future<Catalogos> getCatalogos(String divisionId) async {
+    try {
+      final response = await http.get(
+          Uri.parse('$apiUrl/FlotaVehicular/getCatalogos?divisionId=$divisionId'),
+          headers: {'Content-Type': 'application/json; charset=UTF-8'});
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return Catalogos.fromJson(data);
+      } else {
+        // Manejo de errores de respuesta no exitosa
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Manejo de otros tipos de errores
+      throw Exception('Error fetching data: $e');
     }
   }
 

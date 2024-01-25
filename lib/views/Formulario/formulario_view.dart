@@ -1,17 +1,9 @@
 // ignore_for_file: file_names
 import 'dart:convert';
 import 'package:bconnect_formulario/app_route.dart';
-import 'package:bconnect_formulario/app_theme.dart';
-import 'package:bconnect_formulario/constants.dart';
-import 'package:bconnect_formulario/env.dart';
 import 'package:bconnect_formulario/views/account/account_view.dart';
-import 'package:bconnect_formulario/views/Formulario/info_view.dart';
 import 'package:bconnect_formulario/views/Formulario/questions_view.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import '../../models/models.dart';
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
@@ -28,28 +20,20 @@ class CapacitacionPage extends StatefulWidget {
 class _CapacitacionPageState extends State<CapacitacionPage> {
   final _formKey = GlobalKey<FormState>();
   BCUser? user;
-  FirebaseUser? firebaseUser;
+  String? userid = '';
   BCColaborador? colaborador;
+  String? colaboradorid = '';
+  FirebaseUser? firebaseUser;
   bool isValid = true;
   bool isValidCustomer = true;
   bool isLoadingButton = false;
-  Customer? selectedCustomer;
-  String whatsappNumber = Environment().WHATSAPP_NUMBER;
-  String? collaboratorId = '';
-  String? division = '';
-  String? compania = '';
-  String? puesto='';
-  String? apellido_empleado = '';
-  String? nombre_empleado = '';
-  String? telefono = '';
   String? encuesta = '';
-  Capacitacion? oencuesta;
-  List<Capacitacion> encuestas = [];
-  String? userid = '';
-  String serviceName=Environment().SERVICE_NAME;
-
-  Future<void> getEncuestas(String division) async {
-    var result = await BConnectService().getForms(division, serviceName);
+  getSolicitud? oencuesta;
+  List<getSolicitud> encuestas = [];
+  List<Catalogos> catalogos = [];
+  
+  Future<void> getEncuestas(String colaboradorid) async {
+    var result = await BConnectService().getForms(colaboradorid);
     if (mounted) {
       setState(() {
         if (result.isNotEmpty) {
@@ -59,6 +43,15 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
           encuestas = [];
           oencuesta = null;
         }
+      });
+    }
+  }
+
+  Future<void> getCat(String bcVdivision) async {
+    var result = await BConnectService().getCatalogos(bcVdivision);
+    if (mounted) {
+      setState(() {
+        catalogos = [result]; 
       });
     }
   }
@@ -91,8 +84,8 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
       }
       final jsonColaborador = await PreferencesHelper.getString('colaborador');
       colaborador = BCColaborador.fromJson(jsonDecode(jsonColaborador ?? ''));
-      userid = user?.sId!;
-      getEncuestas(userid!);
+      colaboradorid = colaborador?.codemp;
+      getEncuestas(colaboradorid!);
     } catch (e) {
       await Navigator.pushNamedAndRemoveUntil(
           context, AppRoute.loginRoute, (route) => false);
@@ -104,7 +97,6 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     final userInitials =
         '${(user?.names ?? '') == '' ? '' : (user?.names ?? '').substring(0, 1)}${(user?.lastNames ?? '') == '' ? '' : (user?.lastNames ?? '').substring(0, 1)}';
 
-    final lastRecord = selectedCustomer?.ultimoCenso ?? '';
     return Scaffold(
       appBar: BconnectAppBar(
         onPressed: () => {
@@ -150,9 +142,6 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Text(lastRecord != ''
-                            ? 'Último registro: ${DateFormat('dd-MM-yyyy h:mm a').format(DateTime.parse(lastRecord).toLocal())}'
-                            : '')
                       ]))))),
     );
     // );
@@ -171,7 +160,7 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
         ? encuestas.map((item) {
             return DropdownMenuItem(
               value: item,
-              child: Text(item.bc_nombre.toString()),
+              child: Text(item.bc_folio.toString()),
             );
           }).toList()
         : [DropdownMenuItem(
@@ -202,31 +191,39 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     );
   }
 
-  void showValidForm() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(msgErrorFormulario),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
-  SizedBox btnSave(BuildContext context) { // Asegúrate de pasar el contexto
+  SizedBox btnSave(BuildContext context) {
   return SizedBox(
     width: 600,
     height: 50,
     child: Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
       child: ElevatedButton(
-        onPressed: isLoadingButton 
-          ? null 
-          : () {
-              // Navegación a QuestionsView
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => QuestionsView()),
-              );
-            },
+        onPressed: isLoadingButton
+            ? null
+            : () async {
+                setState(() {
+                  isLoadingButton = true; // Mostrar el círculo de carga
+                });
+
+                // Esperar a que getCat() termine antes de navegar
+                await getCat(oencuesta!.bc_vdivision!);
+
+                // Ocultar el círculo de carga
+                setState(() {
+                  isLoadingButton = false;
+                });
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QuestionsView(
+                      catalogos: catalogos,
+                      bc_asignacionvehiculoid:
+                          oencuesta?.bc_asignacionvehiculoid ?? '',
+                    ),
+                  ),
+                );
+              },
         style: ButtonStyle(
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -234,101 +231,32 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
             ),
           ),
         ),
-        child: !isLoadingButton
-          ? const Text(
-              'Enviar Solicitud',
-              style: TextStyle(fontSize: 16),
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  padding: const EdgeInsets.all(5.0),
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 3,
+        child: isLoadingButton
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 28,
+                    height: 28,
+                    padding: const EdgeInsets.all(5.0),
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 3,
+                    ),
                   ),
-                ),
-                const Text(
-                  'Enviando...',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'Enviando...',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              )
+            : const Text(
+                'Enviar Solicitud',
+                style: TextStyle(fontSize: 16),
+              ),
       ),
     ),
   );
 }
 
-  onSubmit() {
-    if (_formKey.currentState!.validate() && isValid) {
-      _formKey.currentState?.save();
-      send(context);
-    } else {
-      showValidForm();
-    }
-  }
-
-  void send(BuildContext context) async {
-    setState(() {
-      isLoadingButton = true;
-      isValidCustomer = true;
-    });
-
-    encuesta = oencuesta?.bc_nombre;
-    collaboratorId = colaborador?.codemp;
-    nombre_empleado = colaborador?.names!;
-    apellido_empleado = colaborador?.lastNames;
-    telefono = colaborador?.phone;
-    puesto= colaborador?.puesto;
-
-    String? url = oencuesta?.bc_url?.replaceAll("[encuesta_value]", encuesta!);
-    url = url?.replaceAll('[nombreemp_value]', nombre_empleado!);
-    url = url?.replaceAll('[telefono_value]', telefono!);
-    url = url?.replaceAll('[apellidoemp_value]', apellido_empleado!);
-    url = url?.replaceAll('[codemp_value]', collaboratorId!);
-    url = url?.replaceAll('[Puesto_value]', puesto!);
-
-    Uri uri = Uri.parse(url!);
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'No se puede abrir $url';
-    }
-
-    try {
-      if (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android) {
-        if (!mounted) return;
-      }
-
-      if (!mounted) return;
-      await Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute<void>(
-              builder: (BuildContext context) => InfoPage(
-                  user ?? BCUser(), selectedCustomer ?? Customer(), encuesta!)),
-          (route) => false);
-
-      setState(() {
-        _formKey.currentState!.reset();
-        selectedCustomer = null;
-        isLoadingButton = false;
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      setState(() {
-        isLoadingButton = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
-          content: Text(
-              "Ocurrió un error. Intente de nuevo más tarde.")));
-    }
-  }
 }
