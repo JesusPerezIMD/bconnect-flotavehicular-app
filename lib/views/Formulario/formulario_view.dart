@@ -5,14 +5,13 @@ import 'package:bconnect_formulario/app_theme.dart';
 import 'package:bconnect_formulario/constants.dart';
 import 'package:bconnect_formulario/env.dart';
 import 'package:bconnect_formulario/views/account/account_view.dart';
-import 'package:bconnect_formulario/views/Formulario/customers_component.dart';
 import 'package:bconnect_formulario/views/Formulario/info_view.dart';
+import 'package:bconnect_formulario/views/Formulario/questions_view.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as gm;
 import '../../models/models.dart';
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
@@ -35,7 +34,6 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
   bool isValidCustomer = true;
   bool isLoadingButton = false;
   Customer? selectedCustomer;
-  gm.LatLng? selectedGps;
   String whatsappNumber = Environment().WHATSAPP_NUMBER;
   String? collaboratorId = '';
   String? division = '';
@@ -148,7 +146,7 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
                         const SizedBox(
                           height: 10,
                         ),
-                        btnSave(),
+                        btnSave(context),
                         const SizedBox(
                           height: 20,
                         ),
@@ -204,82 +202,6 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     );
   }
 
-  Future<void> _launchUrl() async {
-    final url = Uri.parse(
-        'https://wa.me/?text=Hola,%20te%20invito%20a%20usar%20el%20servicio%capacitacion%20para%20reportar%20oportunidades%20de%20Coca-Cola%202.5L%20Retornable%0Ahttps://wa.me/%2b$whatsappNumber?text=Censo');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch url');
-    }
-  }
-
-  SizedBox btnGoogleMaps() {
-    return SizedBox(
-        width: 600,
-        height: 50,
-        child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: ElevatedButton(
-              onPressed: () {
-                if (selectedCustomer != null) {
-                  _launchMapsUrl(
-                    selectedCustomer!.latitude!,
-                    selectedCustomer!.longitude!,
-                  );
-                }
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  // Icon(
-                  //   Icons.map,
-                  //   color: Colors.black,
-                  // ),
-                  SizedBox(width: 8),
-                  Text(
-                    'Buscar en Google Maps',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            )));
-  }
-
-  Future<void> _launchMapsUrl(num lat, num lng) async {
-    final url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Future<void> _launchWhatsApp() async {
-    final url = Uri.parse('https://wa.me/%2b$whatsappNumber');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch url');
-    }
-  }
-
-  void showValidImages() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(msgErrorImagenes),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
   void showValidForm() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -289,159 +211,55 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     );
   }
 
-  Widget inputCustomer() {
-    return Material(
-      elevation: 0.0,
-      child: Container(
-        margin: const EdgeInsets.all(0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              dense: true,
-              visualDensity:
-                  VisualDensity(vertical: selectedCustomer == null ? -2 : -4),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 0, vertical: -20),
-              trailing: const Icon(Icons.expand_more),
-              horizontalTitleGap: 5,
-              isThreeLine: selectedCustomer != null,
-              title: selectedCustomer == null
-                  ? const Text('Buscar tienda o establecimiento',
-                      style: AppTheme.subtitles)
-                  : Text(
-                      '${(selectedCustomer?.fullName ?? '').toUpperCase()} (${selectedCustomer?.id ?? ''})',
-                      style: const TextStyle(fontSize: 16)),
-              subtitle: selectedCustomer != null
-                  ? Text(
-                      ('${(selectedCustomer?.address ?? '')} ${(selectedCustomer?.colonyName ?? '')}\n${(selectedCustomer?.municipalityName ?? '').toUpperCase()}, ${(selectedCustomer?.stateName ?? '').toUpperCase()}')
-                          .trim(),
-                      style: const TextStyle(fontSize: 12))
-                  : null,
-              onTap: () async {
-                final resultCustomer =
-                    await showModalBottomSheet<Map<String, dynamic>>(
-                  context: context,
-                  isScrollControlled: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20)),
-                  ),
-                  builder: (BuildContext context) {
-                    return FractionallySizedBox(
-                      heightFactor: 0.94,
-                      child: CustomersComponent(
-                        selectedCustomer: selectedCustomer,
-                        codemp: colaborador?.codemp,
-                        division: colaborador?.division,
-                        compania: colaborador?.idcia,
-                        sId: colaborador?.sId,
-                        sIdEncuesta: oencuesta?.bc_encuestaId,
-                      ),
-                    );
-                  },
-                );
-                if (resultCustomer != null) {
-                  setState(() {
-                    selectedCustomer = resultCustomer['customer'];
-                    selectedGps = resultCustomer['gps'];
-                    isValidCustomer = true;
-                  });
-                } else {
-                  setState(() {
-                    selectedCustomer = null;
-                    isValidCustomer = false;
-                    selectedGps = null;
-                  });
-                }
-              },
+  SizedBox btnSave(BuildContext context) { // Asegúrate de pasar el contexto
+  return SizedBox(
+    width: 600,
+    height: 50,
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+      child: ElevatedButton(
+        onPressed: isLoadingButton 
+          ? null 
+          : () {
+              // Navegación a QuestionsView
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => QuestionsView()),
+              );
+            },
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
             ),
-            const Divider(
-              color: Colors.grey,
-              thickness: 1,
-            ),
-            isValidCustomer
-                ? Container()
-                : const Text(
-                    'Seleccione una tienda.',
-                    style: TextStyle(fontSize: 12, color: Colors.red),
-                  ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
-
-  SizedBox btnSave() {
-    return SizedBox(
-        width: 600,
-        height: 50,
-        //height: getProportionatedScreenHeight(50),
-        child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: ElevatedButton(
-                onPressed: isLoadingButton ? null : onSubmit,
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0)))),
-                child: !isLoadingButton
-                    ? const Text(
-                        'Enviar Solicitud',
-                        style: TextStyle(fontSize: 16),
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 28,
-                            height: 28,
-                            padding: const EdgeInsets.all(5.0),
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 3,
-                            ),
-                          ),
-                          const Text(
-                            'Enviando...',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ))));
-  }
-
-  SizedBox btnShare() {
-    return SizedBox(
-        width: 600,
-        height: 50,
-        //height: getProportionatedScreenHeight(50),
-        child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: TextButton(
-                onPressed: () {
-                  if (defaultTargetPlatform == TargetPlatform.iOS ||
-                      defaultTargetPlatform == TargetPlatform.android) {
-                    Share.share(
-                        'Hola, te invito a usar el servicio Flota Vehícular para reportar oportunidades de Coca-Cola 2.5L Retornable\nhttps://wa.me/+$whatsappNumber?text=Auto',
-                        subject: 'Invitación Flota Vehícular');
-                  } else {
-                    _launchUrl();
-                  }
-                },
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.transparent),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0)))),
-                child: const Text(
-                  'Invitar a otros Colaboradores',
-                  style: TextStyle(
-                    fontSize: 16,
-                    decoration: TextDecoration.underline,
+        child: !isLoadingButton
+          ? const Text(
+              'Enviar Solicitud',
+              style: TextStyle(fontSize: 16),
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 28,
+                  height: 28,
+                  padding: const EdgeInsets.all(5.0),
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 3,
                   ),
-                ))));
-  }
+                ),
+                const Text(
+                  'Enviando...',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+      ),
+    ),
+  );
+}
 
   onSubmit() {
     if (_formKey.currentState!.validate() && isValid) {
