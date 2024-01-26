@@ -33,11 +33,20 @@ class _QuestionsViewState extends State<QuestionsView> {
   String? selectedCentroCostosAX;
   String? selectedImporteAsignado;
   String? selectedTopeAsignado;
+  String? selectedChoiceUbicacionFisica;
 
 
 
 @override
 Widget build(BuildContext context) {
+
+  print(widget.catalogos[0].choice);  // Imprimir todos los datos antes del filtro
+
+var filteredItems = (widget.catalogos[0].choice ?? [])
+    .where((ubiFisicaId) => ubiFisicaId.columnname == "bc_ubicacionfisica")
+    .toList();
+
+print(filteredItems);
   String appBarTitle = "Preguntas - Sin Folio";
 
   if (widget.encuestasOne.isNotEmpty) {
@@ -171,6 +180,23 @@ Widget build(BuildContext context) {
               });
             },
           ),
+          CustomDropdownFormField(
+            hintText: "Ubicacion Fisica",
+            value: selectedChoiceUbicacionFisica,
+            items: (widget.catalogos[0].choice ?? [])
+                .where((ubiFisicaId) => ubiFisicaId.columnname == "bc_ubicacionfisica") // Filtrar por "bc_ubicacionfisica"
+                .map((ubiFisicaId) => DropdownItem<String>(
+                      value: ubiFisicaId.choicevalue!, // Usar "choicevalue" como valor
+                      label: ubiFisicaId.choicename!, // Usar "choicename" como etiqueta
+                    ))
+                .toList(),
+            onChanged: (String? value) {
+              setState(() {
+                selectedChoiceUbicacionFisica = value; // Aquí `value` será el ID seleccionado
+              });
+            },
+          ),
+          
           CustomDividerComponent(text: "Contabilidad AX"),
           CustomDropdownFormField(
             hintText: "Sucursal AX",

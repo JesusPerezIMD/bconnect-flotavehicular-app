@@ -390,8 +390,8 @@ class Catalogos {
           .map((i) => LineaProduccionAX.fromJson(i))
           .toList();
     }
-    if (json['choice'] != null) {
-      choice = (json['choice'] as List)
+    if (json['choices'] != null) {
+      choice = (json['choices'] as List)
           .map((i) => Choice.fromJson(i))
           .toList();
     }
