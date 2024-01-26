@@ -103,20 +103,41 @@ Widget build(BuildContext context) {
       userInitials: userInitials,
     ),
     bottomNavigationBar: const NavigationBarComponenet(1),
-    body: ListView.builder(
-      itemCount: encuestas.length, // La cantidad de elementos en la lista
-      itemBuilder: (context, index) {
-        final solicitud = encuestas[index]; // Obtiene el objeto actual
-        return Card(
-          elevation: 2,
-          child: ListTile(
-            title: Text('Folio: ${solicitud.bc_folio}'),
-            subtitle: Text('Tipo Adquisición: ${solicitud.bc_tipoadquisicionname}'),
-            // Agrega más campos del objeto solicitud que desees mostrar
+    body: Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              "Historial de Encuestas",
+              style: TextStyle(
+                color: Color.fromARGB(255, 0, 0, 0),
+                fontSize: 14,
+                fontWeight: FontWeight.bold, // Puedes ajustar el estilo del título aquí
+              ),
+            ),
           ),
-        );
-      },
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: encuestas.length, // La cantidad de elementos en la lista
+            itemBuilder: (context, index) {
+              final solicitud = encuestas[index]; // Obtiene el objeto actual
+              return Card(
+                elevation: 2,
+                child: ListTile(
+                  title: Text('Folio: ${solicitud.bc_folio}'),
+                  subtitle: Text('Tipo Adquisición: ${solicitud.bc_tipoadquisicionname}'),
+                  // Agrega más campos del objeto solicitud que desees mostrar
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     ),
   );
 }
+
 }
