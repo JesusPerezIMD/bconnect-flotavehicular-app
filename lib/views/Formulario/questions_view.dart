@@ -39,14 +39,6 @@ class _QuestionsViewState extends State<QuestionsView> {
 
 @override
 Widget build(BuildContext context) {
-
-  print(widget.catalogos[0].choice);  // Imprimir todos los datos antes del filtro
-
-var filteredItems = (widget.catalogos[0].choice ?? [])
-    .where((ubiFisicaId) => ubiFisicaId.columnname == "bc_ubicacionfisica")
-    .toList();
-
-print(filteredItems);
   String appBarTitle = "Preguntas - Sin Folio";
 
   if (widget.encuestasOne.isNotEmpty) {
