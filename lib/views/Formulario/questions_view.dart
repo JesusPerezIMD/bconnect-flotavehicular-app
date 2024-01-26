@@ -217,7 +217,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDividerComponent(text: "Importe de Monto Asignado"),
-                    CustomDropdownFormField(
+          CustomDropdownFormField(
             hintText: " Validar el importe asignado a 3 y 4 años respectivamente",
             value: selectedImporteAsignado,
             items:  (widget.catalogos[0].importeAsignado ?? [])
