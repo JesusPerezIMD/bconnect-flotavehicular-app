@@ -1,16 +1,14 @@
 import 'package:bconnect_formulario/views/Formulario/formulario_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bconnect_formulario/env.dart';
 import 'package:bconnect_formulario/helpers/preferences_helper.dart';
-import 'package:bconnect_formulario/models/bc_user.dart';
-import 'package:share_plus/share_plus.dart';
+import '../../models/models.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:bconnect_formulario/views/Formulario/historial_view.dart';
 
 class InfoPage extends StatefulWidget {
-  final BCUser user;
+  final getOneSolicitud user;
   final String encuesta;
   const InfoPage(this.user, this.encuesta, {super.key});
 
@@ -47,7 +45,7 @@ class _InfoPageState extends State<InfoPage> {
                     child: Column(children: [
                       ListTile(
                         title: Text(
-                            'Gracias ${widget.user.names?.split(' ')[0] ?? ''}, gracias por responder el Formulario.'),
+                            'Gracias ${widget.user.bc_vcolaboradorname?.split(' ')[0] ?? ''}, gracias por responder el Formulario.'),
                       ),
                       ListTile(
                         title: Text('Solicitud:  ${widget.encuesta}'),

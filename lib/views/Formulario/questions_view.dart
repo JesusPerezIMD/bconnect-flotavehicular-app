@@ -1,4 +1,5 @@
 import 'package:bconnect_formulario/models/getSolicitud_Response.dart';
+import 'package:bconnect_formulario/views/Formulario/info_view.dart';
 import 'package:flutter/material.dart';
 import '../../components/components.dart';
 import '../../models/models.dart';
@@ -256,6 +257,19 @@ Widget build(BuildContext context) {
                   );
                   try {
                     var response = await BConnectService().createRegistros(registros);
+                    // Verifica si la lista encuestasOne tiene elementos antes de acceder
+                    if (widget.encuestasOne.isNotEmpty) {
+                      var selectedEncuesta = widget.encuestasOne[0];
+                      // Navegar a InfoPage si la respuesta es exitosa
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InfoPage(selectedEncuesta, selectedEncuesta.bc_folio!),
+                        ),
+                      );
+                    } else {
+                      // Manejar el caso cuando encuestasOne está vacío
+                    }
                   } catch (e) {
                     throw Exception('Error fetching data: $e');
                   }
@@ -268,7 +282,8 @@ Widget build(BuildContext context) {
               ),
             ),
           ),
-          ],
+
+        ],
       ),
     );
   }
