@@ -4,7 +4,6 @@ import 'package:bconnect_formulario/env.dart';
 import 'package:bconnect_formulario/models/getSolicitud_Response.dart';
 import '../../models/models.dart';
 import 'package:http/http.dart' as http;
-import '../models/response_capacitacion.dart';
 
 class BConnectService {
   String? token;
@@ -106,35 +105,6 @@ class BConnectService {
     }
   }
 
-  Future<List<Customer>> getCustomers(
-      String textSearch,
-      num longitude,
-      num latitude,
-      num limit,
-      num maxDistance,
-      String codemp,
-      String division,
-      String compania,
-      String sId,
-      String sIdEncuesta) async {
-    try {
-      List<Customer> customers = [];
-      final response = await http.get(
-          Uri.parse(
-              '$apiUrl/Capacitacion/Clientes?textoBusqueda=$textSearch&longitud=$longitude&latitud=$latitude&limite=$limit&distanciaMax=$maxDistance&codemp=$codemp&sId=$sId&idEncuesta=$sIdEncuesta&division=$division&compania=$compania'),
-          headers: {'Content-Type': 'application/json; charset=UTF-8'});
-      if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
-        for (var data in result) {
-          customers.add(Customer.fromJson(data));
-        }
-      }
-      return customers;
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-
   Future<List<getSolicitud>> getForms(String userid) async {
     try {
       List<getSolicitud> solicitudList = [];
@@ -202,24 +172,6 @@ class BConnectService {
       }
     } catch (e) {
       throw Exception(e.toString());
-    }
-  }
-
-  Future<List<SolicitudCapacitacion>> getResponse(String codemp,String status) async {
-    try {
-      List<SolicitudCapacitacion> capacitacion = [];
-      final response = await http.get(
-          Uri.parse('$apiUrl/Encuestas/getCapacitacion?empCode=$codemp&status=$status'),
-          headers: {'Content-Type': 'application/json; charset=UTF-8'});
-      if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
-        for (var data in result) {
-          capacitacion.add(SolicitudCapacitacion.fromJson(data));
-        }
-      }
-      return capacitacion;
-    } catch (e) {
-      throw Exception(e);
     }
   }
 

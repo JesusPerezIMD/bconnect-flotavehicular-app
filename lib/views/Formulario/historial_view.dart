@@ -10,12 +10,10 @@ import 'package:bconnect_formulario/views/Formulario/formulario_view.dart';
 import '../../models/models.dart';
 import '../../components/components.dart';
 import 'package:intl/intl.dart';
-import '../../models/response_capacitaciondnc.dart';
-import '../../models/response_capacitacion.dart';
 import '../../services/bconnect_service.dart';
 
 class HistorialCapacitacionPage extends StatefulWidget {
-  final SolicitudCapacitacion? responsecapacitacion;
+  final getSolicitud? responsecapacitacion;
   const HistorialCapacitacionPage({Key? key, this.responsecapacitacion})
       : super(key: key);
   @override
@@ -24,7 +22,7 @@ class HistorialCapacitacionPage extends StatefulWidget {
 }
 
 class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
-  List<SolicitudCapacitacion> listResponse = [];
+  List<getSolicitud> listResponse = [];
   final _formKey = GlobalKey<FormState>();
   BCUser? user;
   FirebaseUser? firebaseUser;
@@ -42,16 +40,6 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
   String? userid = '';
   String serviceName=Environment().SERVICE_NAME;
   String codemp ='';
-
-  Future<void> getResponse(String codemp,String status) async {
-    var result = await BConnectService().getResponse(codemp,status);
-    if (mounted) {
-      setState(() {
-        listResponse = result;
-        loadingReports = false;
-      });
-    }
-  }
 
   Future<void> getForms(String division) async {
     var result = await BConnectService().getForms(division);
@@ -85,7 +73,6 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
         }
         return;
       }
-      await getResponse(codemp, selectedEstatus);
       if (mounted) {
         setState(() {
           loadingReports = false;
@@ -120,8 +107,6 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> listaCapacitaciones = listReports();
-
     final userInitials =
         '${(user?.names ?? '') == '' ? '' : (user?.names ?? '').substring(0, 1)}${(user?.lastNames ?? '') == '' ? '' : (user?.lastNames ?? '').substring(0, 1)}';
     return Scaffold(
@@ -144,95 +129,16 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
               ),
             )
           : ListView.builder(
-              itemCount: listaCapacitaciones.length + 1, // +1 por el widget de filtro
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.all(6),
                     child: filtros());
                 }
-                return listaCapacitaciones[index - 1];
+
               },
             ),
     );
-  }
-
-  List<Widget> listReports() {
-    if (listResponse.isEmpty) {
-      return [
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            'No tienes Solicitudes registradas',
-            style: TextStyle(color: Colors.grey[600]),
-          ),
-        ),
-      ];
-    } else {
-      return  listTodayReports();
-    }
-  }
-
-   List<Widget> listTodayReports() {
-    List<Widget> list = [];
-    var reports = listResponse.where((report) => DateUtils.isSameDay(
-        DateTime.now().toUtc(), (report.createdon ?? DateTime.now())));
-    if (reports.isNotEmpty) {
-      list.add(Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        child: Text(
-          'Reportes del día',
-          style: TextStyle(color: Colors.grey[600]),
-        ),
-      ));
-      list.addAll(reports.map((report) => Column(
-            children: <Widget>[
-              ListTile(
-                contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                leading: SizedBox(
-                  height: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.green[300],
-                        radius: 14,
-                        child: const Icon(
-                                Icons.done,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                      ),
-                    ],
-                  ),
-                ),
-                trailing: SizedBox(
-                  height: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                     Text(
-                        getDateLocal(report.createdon ?? DateTime.now()),
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                      Text(
-                        getTimeLocal(report.createdon ?? DateTime.now()),
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                    ],
-                  ),
-                ),
-                title: Text('${report.folio ?? ''} (${report.modelo})'),
-                subtitle: Text('Encuesta: ${report.plazo}'
-                    '  División: ${report.vdivision}'),
-                isThreeLine: true,
-              ),
-              const Divider(height: 0),
-            ],
-          )));
-    }
-    return list;
   }
 
   String getDateLocal(DateTime utc) {

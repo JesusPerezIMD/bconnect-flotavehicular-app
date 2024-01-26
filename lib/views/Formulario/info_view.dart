@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:bconnect_formulario/env.dart';
 import 'package:bconnect_formulario/helpers/preferences_helper.dart';
 import 'package:bconnect_formulario/models/bc_user.dart';
-import 'package:bconnect_formulario/models/customer.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
@@ -12,9 +11,8 @@ import 'package:bconnect_formulario/views/Formulario/historial_view.dart';
 
 class InfoPage extends StatefulWidget {
   final BCUser user;
-  final Customer customer;
   final String encuesta;
-  const InfoPage(this.user, this.customer, this.encuesta, {super.key});
+  const InfoPage(this.user, this.encuesta, {super.key});
 
   @override
   State<InfoPage> createState() => _InfoPageState();
