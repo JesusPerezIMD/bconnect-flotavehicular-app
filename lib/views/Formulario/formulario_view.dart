@@ -30,6 +30,7 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
   String? encuesta = '';
   getSolicitud? oencuesta;
   List<getSolicitud> encuestas = [];
+  List<getOneSolicitud> encuestasOne = [];
   List<Catalogos> catalogos = [];
   
   Future<void> getEncuestas(String colaboradorid) async {
@@ -43,6 +44,15 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
           encuestas = [];
           oencuesta = null;
         }
+      });
+    }
+  }
+
+  Future<void> getOneEncuestas(String id) async {
+    var result = await BConnectService().getOneForms(id);
+    if (mounted) {
+      setState(() {
+        encuestasOne = result; 
       });
     }
   }
@@ -150,7 +160,7 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
   DropdownButtonFormField ddlEncuestas() {
     return DropdownButtonFormField(
       decoration: const InputDecoration(
-        hintText: 'Seleccione una Formulario',
+        hintText: 'Seleccione un Formulario',
         border: InputBorder.none,
         filled: false,
         fillColor: Color.fromRGBO(204, 204, 204, 80),
@@ -176,7 +186,7 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
           return 'No hay datos disponibles';
         }
         if (value == null) {
-          return 'Seleccione un formulario';
+          return 'Seleccione un Formulario';
         }
         return null;
       },
@@ -207,19 +217,17 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
 
                 // Esperar a que getCat() termine antes de navegar
                 await getCat(oencuesta!.bc_vdivision!);
-
+                await getOneEncuestas(oencuesta!.bc_asignacionvehiculoid!);
                 // Ocultar el círculo de carga
                 setState(() {
                   isLoadingButton = false;
                 });
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => QuestionsView(
                       catalogos: catalogos,
-                      bc_asignacionvehiculoid:
-                          oencuesta?.bc_asignacionvehiculoid ?? '',
+                      encuestasOne: encuestasOne,
                     ),
                   ),
                 );
@@ -245,13 +253,13 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
                   ),
                   const SizedBox(width: 10),
                   const Text(
-                    'Enviando...',
+                    'Procesando...',
                     style: TextStyle(fontSize: 16),
                   ),
                 ],
               )
             : const Text(
-                'Enviar Solicitud',
+                'Seleccione',
                 style: TextStyle(fontSize: 16),
               ),
       ),

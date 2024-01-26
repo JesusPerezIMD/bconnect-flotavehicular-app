@@ -149,6 +149,24 @@ class BConnectService {
     }
   }
 
+    Future<List<getOneSolicitud>> getOneForms(String id) async {
+    try {
+      List<getOneSolicitud> solicitudOneList = [];
+      final response = await http.get(
+          Uri.parse('$apiUrl/FlotaVehicular/getOneSolicitud?id=$id'),
+          headers: {'Content-Type': 'application/json; charset=UTF-8'});
+      if (response.statusCode == 200) {
+        final List<dynamic> result = jsonDecode(response.body);
+        for (var data in result) {
+          solicitudOneList.add(getOneSolicitud.fromJson(data));
+        }
+      }
+      return solicitudOneList;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<Catalogos> getCatalogos(String divisionId) async {
     try {
       final response = await http.get(
