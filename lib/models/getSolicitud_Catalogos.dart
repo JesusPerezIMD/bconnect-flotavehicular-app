@@ -277,20 +277,47 @@ class LineaProduccionAX {
   }
 }
 
-class Choice {
+class DH {
+  String? bc_name;
+  String? bc_tipodh;
+  String? bc_tipodhname;
+  String? bc_vcolaborador;
+  String? bc_vcolaboradorname;
+  String? bc_vdhid;
+
+  DH({
+    this.bc_name,
+    this.bc_tipodh,
+    this.bc_tipodhname,
+    this.bc_vcolaborador,
+    this.bc_vcolaboradorname,
+    this.bc_vdhid,
+  });
+
+  DH.fromJson(Map<String, dynamic> json) {
+    bc_name = json['bc_name'];
+    bc_tipodh = json['bc_tipodh'];
+    bc_tipodhname = json['bc_tipodhname'];
+    bc_vcolaborador = json['bc_vcolaborador'];
+    bc_vcolaboradorname = json['bc_vcolaboradorname'];
+    bc_vdhid = json['bc_vdhid'];
+  }
+}
+
+class Choices {
   String? columnname;
   String? choicevalue;
   String? choicename;
   String? displayorder;
 
-  Choice({
+  Choices({
     this.columnname,
     this.choicevalue,
     this.choicename,
     this.displayorder,
   });
 
-  Choice.fromJson(Map<String, dynamic> json) {
+  Choices.fromJson(Map<String, dynamic> json) {
     columnname = json['columnname'];
     choicevalue = json['choicevalue'];
     choicename = json['choicename'];
@@ -311,7 +338,8 @@ class Catalogos {
   List<DepartamentoAX>? departamentoAX;
   List<CentroCostosAX>? centroCostosAX;
   List<LineaProduccionAX>? lineaProduccionAX;
-  List<Choice>? choice;
+  List<Choices>? choices;
+  List<DH>? dhs;
 
   Catalogos({
     this.division,
@@ -326,7 +354,7 @@ class Catalogos {
     this.departamentoAX,
     this.centroCostosAX,
     this.lineaProduccionAX,
-    this.choice,
+    this.choices,
   });
 
   Catalogos.fromJson(Map<String, dynamic> json) {
@@ -391,8 +419,13 @@ class Catalogos {
           .toList();
     }
     if (json['choices'] != null) {
-      choice = (json['choices'] as List)
-          .map((i) => Choice.fromJson(i))
+      choices = (json['choices'] as List)
+          .map((i) => Choices.fromJson(i))
+          .toList();
+    }
+    if (json['dHs'] != null) {
+      dhs = (json['dHs'] as List)
+          .map((i) => DH.fromJson(i))
           .toList();
     }
   }

@@ -34,12 +34,15 @@ class _CustomDropdownFormFieldState<T> extends State<CustomDropdownFormField<T>>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.hintText,
-          style: TextStyle(
-            color: Color.fromARGB(255, 0, 0, 0),
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
+        Padding(
+          padding: EdgeInsets.only(left: 8.0),
+          child: Text(
+            widget.hintText,
+            style: TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         Padding(

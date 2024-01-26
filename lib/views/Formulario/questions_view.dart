@@ -17,8 +17,8 @@ class QuestionsView extends StatefulWidget {
 
 class _QuestionsViewState extends State<QuestionsView> {
 
-  List<bool> switchStates = [false, false, false];
-
+  int selectedTerminosAsignacion = 0;
+  String? divisionName;
   String? selectedDH;
   String? selectedEmpresaNomina;  
   String? selectedEmpresaServicios; 
@@ -34,7 +34,15 @@ class _QuestionsViewState extends State<QuestionsView> {
   String? selectedImporteAsignado;
   String? selectedTopeAsignado;
   String? selectedChoiceUbicacionFisica;
+  String textUbicacionFisica = "";
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.encuestasOne.isNotEmpty) {
+      divisionName = widget.encuestasOne[0].bc_vdivisionname;
+    }
+  }
 
 
 @override
@@ -64,20 +72,37 @@ Widget build(BuildContext context) {
           padding: const EdgeInsets.only(left: 0, top: 0), // Espacio entre el texto y el Switch
           child: Row(
             children: [
-              Switch(
-                value: switchStates[0],
-                onChanged: (bool value) {
-                  setState(() {
-                    switchStates[0] = value;
-                  });
-                },
-              ),
+            Switch(
+              value: selectedTerminosAsignacion == 1,
+              onChanged: (bool value) {
+                setState(() {
+                  selectedTerminosAsignacion = value ? 1 : 0;
+                });
+              },
+            ),
             ],
           ),
         ),
-          CustomDividerComponent(text: "Datos generales del ejecutivo"),
+        CustomDividerComponent(text: null),
+        CustomDropdownFormField<String>(
+            hintText: "  Nombre del DH responsable",
+            value: selectedDH,
+            items: (widget.catalogos[0].dhs ?? [])
+                .where((dh) => dh.bc_name != null && dh.bc_vdhid!= null)
+                .map((dh) => DropdownItem<String>(
+                      value: dh.bc_vdhid!, // El ID de la empresa
+                      label: dh.bc_name!, // El nombre de la empresa
+                    ))
+                .toList(),
+            onChanged: (String? value) {
+              setState(() {
+                selectedDH = value; // Aquí `value` será el ID seleccionado
+              });
+            },
+          ),
+        CustomDividerComponent(text: "Datos generales del ejecutivo"),
           CustomDropdownFormField<String>(
-            hintText: "Empresa donde nomina",
+            hintText: "  Empresa donde nomina",
             value: selectedEmpresaNomina,
             items: (widget.catalogos[0].empresaNominista ?? [])
                 .where((empresaNomina) => empresaNomina.bc_nombre != null && empresaNomina.bc_vempresanoministaid != null)
@@ -93,7 +118,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Empresa donde presta servicios",
+            hintText: "  Empresa donde presta servicios",
             value: selectedEmpresaServicios,
             items: (widget.catalogos[0].empresaNominista ?? [])
                 .where((empresaServicios) => empresaServicios.bc_nombre != null && empresaServicios.bc_vempresanoministaid != null)
@@ -109,7 +134,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Tipo de Nomina",
+            hintText: "  Tipo de Nomina",
             value: selectedTipoNomina,
             items: (widget.catalogos[0].tipoNomina ?? [])
                 .where((tipoNomina) => tipoNomina.bc_name != null && tipoNomina.bc_vtiponominaid != null)
@@ -125,7 +150,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Departamento",
+            hintText: "  Departamento",
             value: selectedDepartamento,
             items: (widget.catalogos[0].departamento ?? [])
                 .where((departamento) => departamento.bc_name != null && departamento.bc_vdepartamentoid != null)
@@ -141,7 +166,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Sucursal Nominal",
+            hintText: "  Sucursal Nominal",
             value: selectedSucursalNominal,
             items: (widget.catalogos[0].sucursalNominal ?? [])
                 .where((sucursalNominal) => sucursalNominal.bc_name != null && sucursalNominal.bc_vsucursalnominalid != null)
@@ -157,7 +182,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Puesto Asignado",
+            hintText: "  Puesto Asignado",
             value: selectedPuestoAsignado,
             items: (widget.catalogos[0].puestoAsignado ?? [])
                 .where((puestoAsignado) => puestoAsignado.bc_name != null && puestoAsignado.bc_vpuestoid != null)
@@ -173,9 +198,9 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Ubicacion Fisica",
+            hintText: "  Ubicacion Fisica",
             value: selectedChoiceUbicacionFisica,
-            items: (widget.catalogos[0].choice ?? [])
+            items: (widget.catalogos[0].choices ?? [])
                 .where((ubiFisicaId) => ubiFisicaId.columnname == "bc_ubicacionfisica") // Filtrar por "bc_ubicacionfisica"
                 .map((ubiFisicaId) => DropdownItem<String>(
                       value: ubiFisicaId.choicevalue!, // Usar "choicevalue" como valor
@@ -188,10 +213,23 @@ Widget build(BuildContext context) {
               });
             },
           ),
-          
+          Padding(
+            padding: EdgeInsets.all(5), // Ajusta el valor para cambiar el espacio
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Ubicación Física',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  textUbicacionFisica = value;
+                });
+              },
+            ),
+          ),
           CustomDividerComponent(text: "Contabilidad AX"),
           CustomDropdownFormField(
-            hintText: "Sucursal AX",
+            hintText: "  Sucursal AX",
             value: selectedSucursalAX,
             items: (widget.catalogos[0].sucursalAX ?? [])
                 .where((sucursalAX) => sucursalAX.bc_name != null && sucursalAX.bc_vsucursalaxid != null)
@@ -207,7 +245,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Departamento AX",
+            hintText: "  Departamento AX",
             value: selectedDepartamentoAX,
             items: (widget.catalogos[0].departamentoAX ?? [])
                 .where((departamentoAX) => departamentoAX.bc_name != null && departamentoAX.bc_vdepartamentoaxid != null)
@@ -223,7 +261,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Linea de Producción AX",
+            hintText: "  Linea de Producción AX",
             value: selectedLineaProduccionAX,
             items: (widget.catalogos[0].lineaProduccionAX ?? [])
                 .where((lineaProduccionAX) => lineaProduccionAX.bc_name != null && lineaProduccionAX.bc_vlineaproduccionaxid != null)
@@ -239,7 +277,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Area AX",
+            hintText: "  Area AX",
             value: selectedAreaAX,
             items: (widget.catalogos[0].areaAX ?? [])
                 .where((areaAX) => areaAX.bc_name != null && areaAX.bc_vareaaxid != null)
@@ -255,7 +293,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Centro de Costos AX",
+            hintText: "  Centro de Costos AX",
             value: selectedCentroCostosAX,
             items: (widget.catalogos[0].centroCostosAX ?? [])
                 .where((centroCostosAX) => centroCostosAX.bc_name != null && centroCostosAX.bc_vcentrocostosaxid != null)
@@ -272,7 +310,7 @@ Widget build(BuildContext context) {
           ),
           CustomDividerComponent(text: "Importe de Monto Asignado"),
           CustomDropdownFormField(
-            hintText: "Validar el importe asignado a 3 y 4 años respectivamente",
+            hintText: "  Validar el importe asignado a 3 y 4 años respectivamente",
             value: selectedImporteAsignado,
             items: (widget.catalogos[0].importeAsignado ?? [])
                 .where((importeAsignado) => importeAsignado.bc_nombre != null && importeAsignado.bc_vimporteasignadoid != null)
@@ -288,7 +326,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "Validar el tope asignado a 3 y 4 años respectivamente",
+            hintText: "  Validar el tope asignado a 3 y 4 años respectivamente",
             value: selectedTopeAsignado,
             items: (widget.catalogos[0].importeAsignado ?? [])
                 .where((topeAsignado) => topeAsignado.bc_nombre != null && topeAsignado.bc_vimporteasignadoid != null)
@@ -313,6 +351,7 @@ Widget build(BuildContext context) {
                     var selectedEncuesta = widget.encuestasOne[0];
                     CreateRegistros registros = CreateRegistros(
                       bcAsignacionVehiculoId: selectedEncuesta.bc_asignacionvehiculoid,
+                      bcTerminosAsignacionVehiculo: selectedTerminosAsignacion,
                       bcVEmpresaNominista: selectedEmpresaNomina,
                       bcVEmpresaServicios: selectedEmpresaServicios,
                       bcVTipoNomina: selectedTipoNomina,
