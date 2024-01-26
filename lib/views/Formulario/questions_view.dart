@@ -1,6 +1,8 @@
+import 'package:bconnect_formulario/models/getSolicitud_Response.dart';
 import 'package:flutter/material.dart';
 import '../../components/components.dart';
 import '../../models/models.dart';
+import '../../services/services.dart';
 
 class QuestionsView extends StatefulWidget {
   final List<Catalogos> catalogos;
@@ -25,7 +27,7 @@ class _QuestionsViewState extends State<QuestionsView> {
   String? selectedPuestoAsignado; 
   String? selectedSucursalAX;
   String? selectedDepartamentoAX;
-  String?  selectedLineaProduccionAX;
+  String? selectedLineaProduccionAX;
   String? selectedAreaAX;
   String? selectedCentroCostosAX;
   String? selectedImporteAsignado;
@@ -35,11 +37,9 @@ class _QuestionsViewState extends State<QuestionsView> {
 Widget build(BuildContext context) {
   String appBarTitle = "Preguntas - Sin Folio";
 
-  // Verificando si la lista no está vacía y actualizando el título.
   if (widget.encuestasOne.isNotEmpty) {
     appBarTitle = "Folio: ${widget.encuestasOne[0].bc_folio}";
   }
-
   return Scaffold(
     appBar: AppBar(
       title: Text(appBarTitle),
@@ -243,9 +243,33 @@ Widget build(BuildContext context) {
               });
             },
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () async {
+                  CreateRegistros registros = CreateRegistros(
+                    bcVEmpresaNominista: selectedEmpresaNomina, 
+                    bcVEmpresaServicios: selectedEmpresaServicios, 
+                    // ... Continúa agregando los campos necesarios
+                  );
+                  try {
+                    var response = await BConnectService().createRegistros(registros);
+                  } catch (e) {
+                    throw Exception('Error fetching data: $e');
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                ),
+                child: Text('Enviar'),
+              ),
+            ),
+          ),
           ],
       ),
     );
   }
 }
-

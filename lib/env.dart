@@ -10,6 +10,8 @@ class Environment {
   // final WHATSAPP_NUMBER = "15165185350";
 
   //Test
+   final CREATE_POWER_AUTOMATE_FLOW = 
+   'https://prod-91.westus.logic.azure.com:443/workflows/d26bb430f33a48559e86ffd88b78c357/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cDFH6iPxYLm-Y5SazqCinVTyHxEuWxEse9e6LhoWKL8';
   //final BCONNECT_API = "https://bconnectapitest.azurewebsites.net";
   final UrlApiImages = 'https://bconnect-aliados-api.azurewebsites.net/';
   final TWILIO_API = 'https://twiliofunctionbconnect.azurewebsites.net/api';

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:html';
 import 'package:bconnect_formulario/env.dart';
+import 'package:bconnect_formulario/models/getSolicitud_Response.dart';
 import '../../models/models.dart';
 import 'package:http/http.dart' as http;
 import '../models/response_capacitacion.dart';
@@ -7,6 +9,8 @@ import '../models/response_capacitacion.dart';
 class BConnectService {
   String? token;
   String apiUrl = Environment().BCONNECT_API;
+  String powerAutomateCreateFlowUrl =
+      Environment().CREATE_POWER_AUTOMATE_FLOW;
 
   BConnectService();
 
@@ -182,6 +186,22 @@ class BConnectService {
     } catch (e) {
       // Manejo de otros tipos de errores
       throw Exception('Error fetching data: $e');
+    }
+  }
+
+  Future<String> createRegistros(CreateRegistros registros) async {
+    try {
+      var response = await http.get(
+          Uri.parse(
+              "$powerAutomateCreateFlowUrl&bc_asignacionvehiculoid=${registros.bcAsignacionVehiculoId}&bc_importecombustible=${registros.bcImporteCombustible}"),
+          headers: {'Content-Type': 'application/json; charset=UTF-8'});
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        throw Exception('Failed to fetch data');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 
