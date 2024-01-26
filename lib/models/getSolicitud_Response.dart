@@ -15,13 +15,13 @@ class CreateRegistros {
   String? bcSucursalNominalOtras;
   String? bcVPuesto;
   String? bcPuestoOtras;
-  int? bcUbicacionFisica;
+  String? bcUbicacionFisica;
   String? bcUbicacionFisicaOtras;
   String? bcUbicacionFisicaOtros;
   String? bcVdh2;
   String? bcOrganizacionFilial;
-  int? bcCajaSocio;
-  int? bcImporteCombustible;
+  String? bcCajaSocio;
+  String? bcImporteCombustible;
   String? bcImporteCombustibleOtras;
   String? bcImporteCombustibleOtros;
   String? bcVSucursalAx;

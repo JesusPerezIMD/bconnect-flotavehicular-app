@@ -35,6 +35,7 @@ class _QuestionsViewState extends State<QuestionsView> {
   String? selectedTopeAsignado;
   String? selectedChoiceUbicacionFisica;
   String textUbicacionFisica = "";
+  String? selectedChoiceImporteCombustible;
 
   @override
   void initState() {
@@ -214,7 +215,7 @@ Widget build(BuildContext context) {
             },
           ),
           Padding(
-            padding: EdgeInsets.all(5), // Ajusta el valor para cambiar el espacio
+            padding: EdgeInsets.all(6), // Ajusta el valor para cambiar el espacio
             child: TextField(
               decoration: InputDecoration(
                 labelText: 'Ubicación Física',
@@ -226,6 +227,22 @@ Widget build(BuildContext context) {
                 });
               },
             ),
+          ),
+          CustomDropdownFormField(
+            hintText: "  Importe Combustible",
+            value: selectedChoiceImporteCombustible,
+            items: (widget.catalogos[0].choices ?? [])
+                .where((ImportCombustible) => ImportCombustible.columnname == "bc_importecombustible") // Filtrar por "bc_ubicacionfisica"
+                .map((ImportCombustible) => DropdownItem<String>(
+                      value: ImportCombustible.choicevalue!, // Usar "choicevalue" como valor
+                      label: ImportCombustible.choicename!, // Usar "choicename" como etiqueta
+                    ))
+                .toList(),
+            onChanged: (String? value) {
+              setState(() {
+                selectedChoiceImporteCombustible = value; // Aquí `value` será el ID seleccionado
+              });
+            },
           ),
           CustomDividerComponent(text: "Contabilidad AX"),
           CustomDropdownFormField(
@@ -352,12 +369,16 @@ Widget build(BuildContext context) {
                     CreateRegistros registros = CreateRegistros(
                       bcAsignacionVehiculoId: selectedEncuesta.bc_asignacionvehiculoid,
                       bcTerminosAsignacionVehiculo: selectedTerminosAsignacion,
+                      bcVdh: selectedDH,
                       bcVEmpresaNominista: selectedEmpresaNomina,
                       bcVEmpresaServicios: selectedEmpresaServicios,
                       bcVTipoNomina: selectedTipoNomina,
                       bcVDepartamento: selectedDepartamento,
                       bcVSucursalNominal: selectedSucursalNominal,
                       bcVPuesto: selectedPuestoAsignado,
+                      bcUbicacionFisica: selectedChoiceUbicacionFisica,
+                      bcUbicacionFisicaOtros: textUbicacionFisica,
+                      bcImporteCombustible: selectedChoiceImporteCombustible,
                       bcVSucursalAx: selectedSucursalAX,
                       bcVAreaAx: selectedAreaAX,
                       bcVDepartamentoAx: selectedDepartamentoAX,
