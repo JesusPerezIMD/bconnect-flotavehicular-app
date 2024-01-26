@@ -267,8 +267,9 @@ Widget build(BuildContext context) {
                         ),
                       );
                     } catch (e) {
-                      throw Exception('Error fetching data: $e');
+                      print('Error al crear registros: $e'); // Agrega este print para ver el mensaje de error en la consola.
                     }
+
                   } else {
                     // Manejar el caso cuando encuestasOne está vacío
                   }

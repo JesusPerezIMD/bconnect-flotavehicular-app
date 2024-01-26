@@ -161,15 +161,56 @@ class BConnectService {
 
   Future<String> createRegistros(CreateRegistros registros) async {
     try {
+      var body = jsonEncode({
+        'bc_asignacionvehiculoid': registros.bcAsignacionVehiculoId ?? "",
+        'bc_terminosasignacionvehiculo': registros.bcTerminosAsignacionVehiculo?.toString() ?? "0",
+        'bc_vdh': registros.bcVdh ?? "",
+        'bc_imagendatosrequeridos': registros.bcImagenDatosRequeridos?.toString() ?? "0",
+        'bc_vempresanominista': registros.bcVEmpresaNominista ?? "",
+        'bc_empresanoministaotras': registros.bcEmpresaNoministaOtras ?? "",
+        'bc_vempresaservicios': registros.bcVEmpresaServicios ?? "",
+        'bc_empresaserviciosotras': registros.bcEmpresaServiciosOtras ?? "",
+        'bc_vtiponomina': registros.bcVTipoNomina ?? "",
+        'bc_tiponominaotras': registros.bcTipoNominaOtras ?? "",
+        'bc_vdepartamento': registros.bcVDepartamento ?? "",
+        'bc_departamentootras': registros.bcDepartamentoOtras ?? "",
+        'bc_vsucursalnominal': registros.bcVSucursalNominal ?? "",
+        'bc_sucursalnominalotras': registros.bcSucursalNominalOtras ?? "",
+        'bc_vpuesto': registros.bcVPuesto ?? "",
+        'bc_puestootras': registros.bcPuestoOtras ?? "",
+        'bc_ubicacionfisica': registros.bcUbicacionFisica?.toString() ?? "0",
+        'bc_ubicacionfisicaotras': registros.bcUbicacionFisicaOtras ?? "",
+        'bc_ubicacionfisicaotros': registros.bcUbicacionFisicaOtros ?? "",
+        'bc_vdh2': registros.bcVdh2 ?? "",
+        'bc_organizacionfilial': registros.bcOrganizacionFilial ?? "",
+        'bc_cajasocio': registros.bcCajaSocio?.toString() ?? "0",
+        'bc_importecombustible': registros.bcImporteCombustible?.toString() ?? "0",
+        'bc_importecombustibleotras': registros.bcImporteCombustibleOtras ?? "",
+        'bc_importecombustibleotros': registros.bcImporteCombustibleOtros ?? "",
+        'bc_vsucursalax': registros.bcVSucursalAx ?? "",
+        'bc_sucursalaxotras': registros.bcSucursalAxOtras ?? "",
+        'bc_vareaax': registros.bcVAreaAx ?? "",
+        'bc_vdepartamentoax': registros.bcVDepartamentoAx ?? "",
+        'bc_departamentoaxotras': registros.bcDepartamentoAxOtras ?? "",
+        'bc_areaaxotras': registros.bcAreaAxOtras ?? "",
+        'bc_vcentrocostosax': registros.bcVCentroCostosAx ?? "",
+        'bc_centrocostosaxotras': registros.bcCentroCostosAxOtras ?? "",
+        'bc_lineaproduccionaxotras': registros.bcLineaProduccionAxOtras ?? "",
+        'bc_vlineaproduccionax': registros.bcVLineaProduccionAx ?? "",
+        'bc_vimporteasignado': registros.bcVImporteAsignado ?? "",
+        'bc_importeasignadootros': registros.bcImporteAsignadoOtros ?? "",
+      });
+
+      // Imprimir el cuerpo de la solicitud
+      print(body);
+
       var response = await http.post(
         Uri.parse(powerAutomateCreateFlowUrl),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({
-          'bc_asignacionvehiculoid': registros.bcAsignacionVehiculoId,
-          'bc_vimporteasignado': registros.bcVImporteAsignado,
-        }),
+        body: body,
       );
-      if (response.statusCode == 200) {
+
+      if (response.statusCode == 202) {
         return response.body;
       } else {
         throw Exception('Failed to fetch data. Status code: ${response.statusCode}');
@@ -178,4 +219,5 @@ class BConnectService {
       throw Exception(e.toString());
     }
   }
+
 }
