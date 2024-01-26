@@ -250,16 +250,15 @@ Widget build(BuildContext context) {
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () async {
-                  CreateRegistros registros = CreateRegistros(
-                    bcVEmpresaNominista: selectedEmpresaNomina, 
-                    bcVEmpresaServicios: selectedEmpresaServicios, 
-                    // ... Continúa agregando los campos necesarios
-                  );
-                  try {
-                    var response = await BConnectService().createRegistros(registros);
-                    // Verifica si la lista encuestasOne tiene elementos antes de acceder
-                    if (widget.encuestasOne.isNotEmpty) {
-                      var selectedEncuesta = widget.encuestasOne[0];
+                  if (widget.encuestasOne.isNotEmpty) {
+                    var selectedEncuesta = widget.encuestasOne[0];
+                    CreateRegistros registros = CreateRegistros(
+                      bcAsignacionVehiculoId: selectedEncuesta.bc_asignacionvehiculoid,
+                      bcVImporteAsignado: selectedImporteAsignado, 
+                    );
+
+                    try {
+                      var response = await BConnectService().createRegistros(registros);
                       // Navegar a InfoPage si la respuesta es exitosa
                       Navigator.push(
                         context,
@@ -267,11 +266,11 @@ Widget build(BuildContext context) {
                           builder: (context) => InfoPage(selectedEncuesta, selectedEncuesta.bc_folio!),
                         ),
                       );
-                    } else {
-                      // Manejar el caso cuando encuestasOne está vacío
+                    } catch (e) {
+                      throw Exception('Error fetching data: $e');
                     }
-                  } catch (e) {
-                    throw Exception('Error fetching data: $e');
+                  } else {
+                    // Manejar el caso cuando encuestasOne está vacío
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -282,7 +281,6 @@ Widget build(BuildContext context) {
               ),
             ),
           ),
-
         ],
       ),
     );

@@ -161,18 +161,21 @@ class BConnectService {
 
   Future<String> createRegistros(CreateRegistros registros) async {
     try {
-      var response = await http.get(
-          Uri.parse(
-              "$powerAutomateCreateFlowUrl&bc_asignacionvehiculoid=${registros.bcAsignacionVehiculoId}&bc_importecombustible=${registros.bcImporteCombustible}"),
-          headers: {'Content-Type': 'application/json; charset=UTF-8'});
+      var response = await http.post(
+        Uri.parse(powerAutomateCreateFlowUrl),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({
+          'bc_asignacionvehiculoid': registros.bcAsignacionVehiculoId,
+          'bc_vimporteasignado': registros.bcVImporteAsignado,
+        }),
+      );
       if (response.statusCode == 200) {
         return response.body;
       } else {
-        throw Exception('Failed to fetch data');
+        throw Exception('Failed to fetch data. Status code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception(e.toString());
     }
   }
-
 }
