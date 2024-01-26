@@ -34,6 +34,8 @@ class _QuestionsViewState extends State<QuestionsView> {
   String? selectedImporteAsignado;
   String? selectedTopeAsignado;
 
+
+
 @override
 Widget build(BuildContext context) {
   String appBarTitle = "Preguntas - Sin Folio";
@@ -73,177 +75,216 @@ Widget build(BuildContext context) {
           ),
         ),
           CustomDividerComponent(text: "Datos generales del ejecutivo"),
-          CustomDropdownFormField(
-            hintText: " Empresa donde nomina",
+          CustomDropdownFormField<String>(
+            hintText: "Empresa donde nomina",
             value: selectedEmpresaNomina,
             items: (widget.catalogos[0].empresaNominista ?? [])
-                .where((empresaNomina) => empresaNomina.bc_nombre != null)
-                .map((empresaNomina) => empresaNomina.bc_nombre!)
+                .where((empresaNomina) => empresaNomina.bc_nombre != null && empresaNomina.bc_vempresanoministaid != null)
+                .map((empresaNomina) => DropdownItem<String>(
+                      value: empresaNomina.bc_vempresanoministaid!, // El ID de la empresa
+                      label: empresaNomina.bc_nombre!, // El nombre de la empresa
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedEmpresaNomina = value;
+                selectedEmpresaNomina = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Empresa donde presta servicios",
+            hintText: "Empresa donde presta servicios",
             value: selectedEmpresaServicios,
             items: (widget.catalogos[0].empresaNominista ?? [])
-                .where((empresa) => empresa.bc_nombre != null)
-                .map((empresa) => empresa.bc_nombre!)
+                .where((empresaServicios) => empresaServicios.bc_nombre != null && empresaServicios.bc_vempresanoministaid != null)
+                .map((empresaServicios) => DropdownItem<String>(
+                      value: empresaServicios.bc_vempresanoministaid!, // El ID de la empresa
+                      label: empresaServicios.bc_nombre!, // El nombre de la empresa
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedEmpresaServicios = value;
+                selectedEmpresaServicios = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Tipo de Nomina",
+            hintText: "Tipo de Nomina",
             value: selectedTipoNomina,
             items: (widget.catalogos[0].tipoNomina ?? [])
-                .where((tipoN) => tipoN.bc_name != null)
-                .map((tipoN) => tipoN.bc_name!)
+                .where((tipoNomina) => tipoNomina.bc_name != null && tipoNomina.bc_vtiponominaid != null)
+                .map((tipoNomina) => DropdownItem<String>(
+                      value: tipoNomina.bc_vtiponominaid!, // El ID del tipo de nómina
+                      label: tipoNomina.bc_name!, // El nombre del tipo de nómina
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedTipoNomina = value;
+                selectedTipoNomina = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Departamento",
+            hintText: "Departamento",
             value: selectedDepartamento,
             items: (widget.catalogos[0].departamento ?? [])
-                .where((depa) => depa.bc_name != null)
-                .map((depa) => depa.bc_name!)
+                .where((departamento) => departamento.bc_name != null && departamento.bc_vdepartamentoid != null)
+                .map((departamento) => DropdownItem<String>(
+                      value: departamento.bc_vdepartamentoid!, // El ID del departamento
+                      label: departamento.bc_name!, // El nombre del departamento
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedDepartamento = value;
+                selectedDepartamento = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Sucursal Nominal",
+            hintText: "Sucursal Nominal",
             value: selectedSucursalNominal,
             items: (widget.catalogos[0].sucursalNominal ?? [])
-                .where((sn) => sn.bc_name != null)
-                .map((sn) => sn.bc_name!)
+                .where((sucursalNominal) => sucursalNominal.bc_name != null && sucursalNominal.bc_vsucursalnominalid != null)
+                .map((sucursalNominal) => DropdownItem<String>(
+                      value: sucursalNominal.bc_vsucursalnominalid!, // El ID de la sucursal nominal
+                      label: sucursalNominal.bc_name!, // El nombre de la sucursal nominal
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedSucursalNominal = value;
+                selectedSucursalNominal = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Puesto Asignado",
+            hintText: "Puesto Asignado",
             value: selectedPuestoAsignado,
             items: (widget.catalogos[0].puestoAsignado ?? [])
-                .where((pa) => pa.bc_name != null)
-                .map((pa) => pa.bc_name!)
+                .where((puestoAsignado) => puestoAsignado.bc_name != null && puestoAsignado.bc_vpuestoid != null)
+                .map((puestoAsignado) => DropdownItem<String>(
+                      value: puestoAsignado.bc_vpuestoid!, // El ID del puesto asignado
+                      label: puestoAsignado.bc_name!, // El nombre del puesto asignado
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedPuestoAsignado = value;
+                selectedPuestoAsignado = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDividerComponent(text: "Contabilidad AX"),
           CustomDropdownFormField(
-            hintText: " Sucursal AX",
+            hintText: "Sucursal AX",
             value: selectedSucursalAX,
-            items:  (widget.catalogos[0].sucursalAX ?? [])
-                .where((sucurAX) => sucurAX.bc_name != null)
-                .map((sucurAX) => sucurAX.bc_name!)
+            items: (widget.catalogos[0].sucursalAX ?? [])
+                .where((sucursalAX) => sucursalAX.bc_name != null && sucursalAX.bc_vsucursalaxid != null)
+                .map((sucursalAX) => DropdownItem<String>(
+                      value: sucursalAX.bc_vsucursalaxid!, // El ID de la sucursal AX
+                      label: sucursalAX.bc_name!, // El nombre de la sucursal AX
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedSucursalAX = value;
+                selectedSucursalAX = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Departamento AX",
+            hintText: "Departamento AX",
             value: selectedDepartamentoAX,
-            items:  (widget.catalogos[0].departamentoAX ?? [])
-                .where((depaAX) => depaAX.bc_name != null)
-                .map((depaAX) => depaAX.bc_name!)
+            items: (widget.catalogos[0].departamentoAX ?? [])
+                .where((departamentoAX) => departamentoAX.bc_name != null && departamentoAX.bc_vdepartamentoaxid != null)
+                .map((departamentoAX) => DropdownItem<String>(
+                      value: departamentoAX.bc_vdepartamentoaxid!, // El ID del departamento AX
+                      label: departamentoAX.bc_name!, // El nombre del departamento AX
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedDepartamentoAX = value;
+                selectedDepartamentoAX = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Linea de Producción AX",
+            hintText: "Linea de Producción AX",
             value: selectedLineaProduccionAX,
-            items:  (widget.catalogos[0].lineaProduccionAX ?? [])
-                .where((lineaAX) => lineaAX.bc_name != null)
-                .map((lineaAX) => lineaAX.bc_name!)
+            items: (widget.catalogos[0].lineaProduccionAX ?? [])
+                .where((lineaProduccionAX) => lineaProduccionAX.bc_name != null && lineaProduccionAX.bc_vlineaproduccionaxid != null)
+                .map((lineaProduccionAX) => DropdownItem<String>(
+                      value: lineaProduccionAX.bc_vlineaproduccionaxid!, // El ID de la línea de producción AX
+                      label: lineaProduccionAX.bc_name!, // El nombre de la línea de producción AX
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedLineaProduccionAX = value;
+                selectedLineaProduccionAX = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Area AX",
+            hintText: "Area AX",
             value: selectedAreaAX,
-            items:  (widget.catalogos[0].areaAX ?? [])
-                .where((arAX) => arAX.bc_name != null)
-                .map((arAX) => arAX.bc_name!)
+            items: (widget.catalogos[0].areaAX ?? [])
+                .where((areaAX) => areaAX.bc_name != null && areaAX.bc_vareaaxid != null)
+                .map((areaAX) => DropdownItem<String>(
+                      value: areaAX.bc_vareaaxid!, // El ID del área AX
+                      label: areaAX.bc_name!, // El nombre del área AX
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedAreaAX = value;
+                selectedAreaAX = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Centro de Costos AX",
+            hintText: "Centro de Costos AX",
             value: selectedCentroCostosAX,
-            items:  (widget.catalogos[0].centroCostosAX ?? [])
-                .where((centroAX) => centroAX.bc_name != null)
-                .map((centroAX) => centroAX.bc_name!)
+            items: (widget.catalogos[0].centroCostosAX ?? [])
+                .where((centroCostosAX) => centroCostosAX.bc_name != null && centroCostosAX.bc_vcentrocostosaxid != null)
+                .map((centroCostosAX) => DropdownItem<String>(
+                      value: centroCostosAX.bc_vcentrocostosaxid!, // El ID del centro de costos AX
+                      label: centroCostosAX.bc_name!, // El nombre del centro de costos AX
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedCentroCostosAX = value;
+                selectedCentroCostosAX = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDividerComponent(text: "Importe de Monto Asignado"),
           CustomDropdownFormField(
-            hintText: " Validar el importe asignado a 3 y 4 años respectivamente",
+            hintText: "Validar el importe asignado a 3 y 4 años respectivamente",
             value: selectedImporteAsignado,
-            items:  (widget.catalogos[0].importeAsignado ?? [])
-                .where((importAsignado) => importAsignado.bc_nombre != null)
-                .map((importAsignado) => importAsignado.bc_nombre!)
+            items: (widget.catalogos[0].importeAsignado ?? [])
+                .where((importeAsignado) => importeAsignado.bc_nombre != null && importeAsignado.bc_vimporteasignadoid != null)
+                .map((importeAsignado) => DropdownItem<String>(
+                      value: importeAsignado.bc_vimporteasignadoid!, // El ID del importe asignado
+                      label: importeAsignado.bc_nombre!, // El nombre del importe asignado
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedImporteAsignado = value;
+                selectedImporteAsignado = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
           CustomDropdownFormField(
-            hintText: " Validar el tope asignado a 3 y 4 años respectivamente",
+            hintText: "Validar el tope asignado a 3 y 4 años respectivamente",
             value: selectedTopeAsignado,
             items: (widget.catalogos[0].importeAsignado ?? [])
-                .where((importTope) => importTope.bc_nombre != null)
-                .map((importTope) => importTope.bc_nombre!)
+                .where((topeAsignado) => topeAsignado.bc_nombre != null && topeAsignado.bc_vimporteasignadoid != null)
+                .map((topeAsignado) => DropdownItem<String>(
+                      value: topeAsignado.bc_vimporteasignadoid!, // El ID del importe asignado
+                      label: topeAsignado.bc_nombre!, // El nombre del importe asignado
+                    ))
                 .toList(),
-            onChanged: (value) {
+            onChanged: (String? value) {
               setState(() {
-                selectedTopeAsignado = value;
+                selectedTopeAsignado = value; // Aquí `value` será el ID seleccionado
               });
             },
-          ),
+          ), 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
             child: Align(
@@ -254,7 +295,18 @@ Widget build(BuildContext context) {
                     var selectedEncuesta = widget.encuestasOne[0];
                     CreateRegistros registros = CreateRegistros(
                       bcAsignacionVehiculoId: selectedEncuesta.bc_asignacionvehiculoid,
-                      bcVImporteAsignado: selectedImporteAsignado, 
+                      bcVEmpresaNominista: selectedEmpresaNomina,
+                      bcVEmpresaServicios: selectedEmpresaServicios,
+                      bcVTipoNomina: selectedTipoNomina,
+                      bcVDepartamento: selectedDepartamento,
+                      bcVSucursalNominal: selectedSucursalNominal,
+                      bcVPuesto: selectedPuestoAsignado,
+                      bcVSucursalAx: selectedSucursalAX,
+                      bcVAreaAx: selectedAreaAX,
+                      bcVDepartamentoAx: selectedDepartamentoAX,
+                      bcVCentroCostosAx: selectedCentroCostosAX,
+                      bcVLineaProduccionAx: selectedLineaProduccionAX,
+                      bcVImporteAsignado: selectedImporteAsignado,
                     );
 
                     try {

@@ -1,23 +1,34 @@
 import 'package:flutter/material.dart';
 
-class CustomDropdownFormField extends StatefulWidget {
-  final String hintText;
-  final List<String> items;
-  final String? value;
-  final Function(String?) onChanged;
+// Clase para manejar elementos del dropdown con un valor y una etiqueta
+class DropdownItem<T> {
+  T value;
+  String label;
 
-  CustomDropdownFormField({
-    required this.hintText,
-    required this.items,
-    required this.value,
-    required this.onChanged,
-  });
-
-  @override
-  _CustomDropdownFormFieldState createState() => _CustomDropdownFormFieldState();
+  DropdownItem({required this.value, required this.label});
 }
 
-class _CustomDropdownFormFieldState extends State<CustomDropdownFormField> {
+// Widget CustomDropdownFormField genérico
+class CustomDropdownFormField<T> extends StatefulWidget {
+  final List<DropdownItem<T>> items;
+  final T? value;
+  final ValueChanged<T?>? onChanged;
+  final String hintText;
+
+  CustomDropdownFormField({
+    Key? key,
+    required this.items,
+    this.value,
+    this.onChanged,
+    required this.hintText,
+  }) : super(key: key);
+
+  @override
+  _CustomDropdownFormFieldState<T> createState() => _CustomDropdownFormFieldState<T>();
+}
+
+// Estado del CustomDropdownFormField
+class _CustomDropdownFormFieldState<T> extends State<CustomDropdownFormField<T>> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,39 +44,30 @@ class _CustomDropdownFormFieldState extends State<CustomDropdownFormField> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Expanded(  // Envolver el DropdownButtonFormField con Expanded
-            child: DropdownButtonFormField<String>(
-              isExpanded: true,  // Asegúrate de que isExpanded esté configurado en true
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Seleccione',
-                hintStyle: TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0),
-                ),
+          child: DropdownButtonFormField<T>(
+            isExpanded: true,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Seleccione',
+              hintStyle: TextStyle(
+                color: Color.fromARGB(255, 0, 0, 0),
               ),
-              icon: Icon(
-                Icons.expand_more,
-                color: Colors.red,
-              ),
-              value: widget.value,
-              items: widget.items.isNotEmpty
-                  ? widget.items.map((item) {
-                      return DropdownMenuItem(
-                        value: item,
-                        child: Text(
-                          item.toString(),
-                          overflow: TextOverflow.ellipsis, // Truncar con puntos suspensivos
-                        ),
-                      );
-                    }).toList()
-                  : [
-                      DropdownMenuItem(
-                        value: "NoData",
-                        child: Text("No existen datos"),
-                      ),
-                    ],
-              onChanged: widget.onChanged,
             ),
+            icon: Icon(
+              Icons.expand_more,
+              color: Colors.red,
+            ),
+            value: widget.value,
+            items: widget.items.map((DropdownItem<T> item) {
+              return DropdownMenuItem<T>(
+                value: item.value,
+                child: Text(
+                  item.label,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              );
+            }).toList(),
+            onChanged: widget.onChanged,
           ),
         ),
       ],
