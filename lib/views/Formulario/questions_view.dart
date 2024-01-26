@@ -16,13 +16,13 @@ class _QuestionsViewState extends State<QuestionsView> {
 
   List<bool> switchStates = [false, false, false];
 
-  String? selectedDH; // Variable para almacenar el DH seleccionado
-  String? selectedEmpresaNomina; // Variable para almacenar la empresa de nomina 
-  String? selectedEmpresaServicios; // Variable para almacenar la empresa donde presta servicios
-  String? selectedTipoNomina; // Variable para almacenar el tipo de nómina
-  String? selectedDepartamento; // Variable para almacenar el departamento
-  String? selectedSucursalNominal; // Variable para almacenar la sucursal nominal
-  String? selectedPuestoAsignado; // Variable para almacenar el puesto asignado
+  String? selectedDH;
+  String? selectedEmpresaNomina;  
+  String? selectedEmpresaServicios; 
+  String? selectedTipoNomina; 
+  String? selectedDepartamento; 
+  String? selectedSucursalNominal; 
+  String? selectedPuestoAsignado; 
   String? selectedSucursalAX;
   String? selectedDepartamentoAX;
   String?  selectedLineaProduccionAX;
@@ -46,11 +46,11 @@ Widget build(BuildContext context) {
     ),
     body: ListView(
       children: <Widget>[
-        ListTile(
-          title: Text(
-            style: TextStyle(
-          fontSize: 14,
-        ),
+          ListTile(
+            title: Text(
+              style: TextStyle(
+            fontSize: 14,
+          ),
             "Por este medio autorizo expresamente a BEPENSA, S.A. DE C.V., sus subsidiarias, afiliadas, controladora y demás empresas relacionadas (en lo sucesivo “BEPENSA”), con domicilio en la Calle 60 Diagonal número 493 entre las calles 59 y 61 de la Colonia Parque Industrial Yucatán, Mérida, Yucatán, para usar, mantener, administrar y en general tratar la información proporcionada por el suscrito, como consecuencia de la relación comercial que actualmente existe o pudiera existir con “BEPENSA”; para mayor información del tratamiento y de los derechos que pueden hacer valer, favor de acceder al Aviso de Privacidad Completo en www.bepensa.com o contactar al Departamento Especializado de Datos Personales al correo electrónico siguiente: datospersonales@bepensa.com",
             maxLines: null,
             overflow: TextOverflow.visible,
@@ -164,7 +164,6 @@ Widget build(BuildContext context) {
               });
             },
           ),
-
           CustomDropdownFormField(
             hintText: " Departamento AX",
             value: selectedDepartamentoAX,
@@ -178,7 +177,6 @@ Widget build(BuildContext context) {
               });
             },
           ),
-
           CustomDropdownFormField(
             hintText: " Linea de Producción AX",
             value: selectedLineaProduccionAX,
@@ -192,7 +190,6 @@ Widget build(BuildContext context) {
               });
             },
           ),
-
           CustomDropdownFormField(
             hintText: " Area AX",
             value: selectedAreaAX,
@@ -206,7 +203,6 @@ Widget build(BuildContext context) {
               });
             },
           ),
-
           CustomDropdownFormField(
             hintText: " Centro de Costos AX",
             value: selectedCentroCostosAX,
@@ -234,7 +230,7 @@ Widget build(BuildContext context) {
               });
             },
           ),
-                    CustomDropdownFormField(
+          CustomDropdownFormField(
             hintText: " Validar el tope asignado a 3 y 4 años respectivamente",
             value: selectedTopeAsignado,
             items: (widget.catalogos[0].importeAsignado ?? [])
@@ -247,7 +243,6 @@ Widget build(BuildContext context) {
               });
             },
           ),
-
           ],
       ),
     );
