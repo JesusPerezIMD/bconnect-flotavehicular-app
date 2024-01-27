@@ -49,8 +49,8 @@ class getSolicitud {
   String? bc_ubicacionfisicaotros;
   String? bc_vdh2;
   String? bc_vdh2name;
-  String? bc_importecombustible;
-  int? bc_importecombustiblename;
+  int? bc_importecombustible;
+  String? bc_importecombustiblename;
   String? bc_organizacionfilial;
   int? bc_cajasocio;
   String? bc_cajasocioname;
