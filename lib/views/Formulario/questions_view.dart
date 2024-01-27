@@ -41,6 +41,42 @@ class _QuestionsViewState extends State<QuestionsView> {
   String? selectedImporteAsignado;
   String? selectedTopeAsignado;
 
+bool isValid() {
+  // Valida si el campo asociado a 'divisionName' diferente de "Motriz" es visible y requerido
+  if (divisionName != "Motriz") {
+    if (selectedImagenDatosRequeridos != 1) {
+      _showErrorDialog("Debe confirmar la imagen de datos requeridos para su división.");
+      return false;
+    }
+  }
+  if (selectedDH == null) {
+    _showErrorDialog("Debe seleccionar un DH.");
+    return false;
+  }
+  return true; 
+}
+
+void _showErrorDialog(String message) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Error'),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('OK', style: TextStyle(color: Colors.white)),
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.red,
+          ),
+        ),
+      ],
+      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 15), // Reduce el padding aquí
+      insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 15), // Reduce el padding del diálogo en la pantalla
+    ),
+  );
+}
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +84,6 @@ class _QuestionsViewState extends State<QuestionsView> {
       divisionName = widget.encuestasOne[0].bc_vdivisionname;
     }
   }
-
 
 @override
 Widget build(BuildContext context) {
@@ -105,6 +140,7 @@ Widget build(BuildContext context) {
             },
           ),
         CustomDividerComponent(text: "Datos generales del ejecutivo"),
+          if (divisionName != "Motriz")
           ListTile(
               title: Text(
                 style: TextStyle(
@@ -115,6 +151,7 @@ Widget build(BuildContext context) {
               overflow: TextOverflow.visible,
             ),
           ),
+          if (divisionName != "Motriz")
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el valor según tus necesidades
             child: Image.asset(
@@ -122,6 +159,7 @@ Widget build(BuildContext context) {
               fit: BoxFit.scaleDown,
             ),
           ),
+          if (divisionName != "Motriz")
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el valor según tus necesidades
             child: Image.asset(
@@ -129,6 +167,7 @@ Widget build(BuildContext context) {
               fit: BoxFit.scaleDown,
             ),
           ),
+          if (divisionName != "Motriz")
           Padding(
             padding: EdgeInsets.only(left: 16.0), // Agrega padding solo al lado izquierdo
             child: Align(
@@ -175,6 +214,7 @@ Widget build(BuildContext context) {
               });
             },
           ),
+          if (divisionName != "Motriz")
           CustomDropdownFormField(
             hintText: "  Tipo de Nomina",
             value: selectedTipoNomina,
@@ -449,6 +489,9 @@ Widget build(BuildContext context) {
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () async {
+                  if (!isValid()) {
+                    return;
+                  }
                   if (widget.encuestasOne.isNotEmpty) {
                     var selectedEncuesta = widget.encuestasOne[0];
                     CreateRegistros registros = CreateRegistros(
