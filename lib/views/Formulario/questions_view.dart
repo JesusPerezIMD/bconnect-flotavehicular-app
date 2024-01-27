@@ -19,6 +19,7 @@ class _QuestionsViewState extends State<QuestionsView> {
 
   String? divisionName;
   int? selectedTerminosAsignacion = 0;
+  int? selectedImagenDatosRequeridos = 0;
   String? selectedDH;
   String? selectedEmpresaNomina;  
   String? selectedEmpresaServicios; 
@@ -62,7 +63,7 @@ Widget build(BuildContext context) {
     ),
     body: ListView(
       children: <Widget>[
-          ListTile(
+        ListTile(
             title: Text(
               style: TextStyle(
             fontSize: 14,
@@ -73,10 +74,10 @@ Widget build(BuildContext context) {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 0, top: 0), // Espacio entre el texto y el Switch
-          child: Row(
-            children: [
-            Switch(
+          padding: EdgeInsets.only(left: 16.0), // Agrega padding solo al lado izquierdo
+          child: Align(
+            alignment: Alignment.centerLeft, // Alinea el contenido a la izquierda
+            child: Switch(
               value: selectedTerminosAsignacion == 1,
               onChanged: (bool value) {
                 setState(() {
@@ -84,7 +85,6 @@ Widget build(BuildContext context) {
                 });
               },
             ),
-            ],
           ),
         ),
         CustomDividerComponent(text: null),
@@ -104,8 +104,45 @@ Widget build(BuildContext context) {
               });
             },
           ),
-        CustomDividerComponent(text: "Datos generales del ejecutivo"),  
-Image.asset('assets/DGE1.png'),
+        CustomDividerComponent(text: "Datos generales del ejecutivo"),
+          ListTile(
+              title: Text(
+                style: TextStyle(
+              fontSize: 14,
+            ),
+              "A continuación la imagen de los datos requeridos. En caso de que no aplique algún dato en la división, colocar NA.",
+              maxLines: null,
+              overflow: TextOverflow.visible,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el valor según tus necesidades
+            child: Image.asset(
+              'assets/DGE1.png',
+              fit: BoxFit.scaleDown,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el valor según tus necesidades
+            child: Image.asset(
+              'assets/DGE2.png',
+              fit: BoxFit.scaleDown,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 16.0), // Agrega padding solo al lado izquierdo
+            child: Align(
+              alignment: Alignment.centerLeft, // Alinea el contenido a la izquierda
+              child: Switch(
+                value: selectedImagenDatosRequeridos == 1,
+                onChanged: (bool value) {
+                  setState(() {
+                    selectedImagenDatosRequeridos = value ? 1 : 0;
+                  });
+                },
+              ),
+            ),
+          ),
           CustomDropdownFormField<String>(
             hintText: "  Empresa donde nomina",
             value: selectedEmpresaNomina,
@@ -417,6 +454,7 @@ Image.asset('assets/DGE1.png'),
                     CreateRegistros registros = CreateRegistros(
                       bcAsignacionVehiculoId: selectedEncuesta.bc_asignacionvehiculoid,
                       bcTerminosAsignacionVehiculo: selectedTerminosAsignacion,
+                      bcImagenDatosRequeridos: selectedImagenDatosRequeridos,
                       bcVdh: selectedDH,
                       bcVdh2: selectedDH,
                       bcVEmpresaNominista: selectedEmpresaNomina,
