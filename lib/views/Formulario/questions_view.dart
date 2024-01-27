@@ -49,9 +49,56 @@ bool isValid() {
       return false;
     }
   }
-  if (selectedDH == null) {
-    _showErrorDialog("Debe seleccionar un DH.");
-    return false;
+  if (divisionName != "Capital" && divisionName != "Motriz") {
+    // Verifica cada campo individualmente
+    if (selectedSucursalAX == null) {
+      _showErrorDialog("Debe seleccionar una sucursal de AX.");
+      return false;
+    }
+    if (selectedAreaAX == null) {
+      _showErrorDialog("Debe seleccionar un área de AX.");
+      return false;
+    }
+    if (selectedDepartamentoAX == null) {
+      _showErrorDialog("Debe seleccionar un departamento de AX.");
+      return false;
+    }
+    if (selectedCentroCostosAX == null) {
+      _showErrorDialog("Debe seleccionar un centro de costos de AX.");
+      return false;
+    }
+    if (selectedLineaProduccionAX == null) {
+      _showErrorDialog("Debe seleccionar una línea de producción de AX.");
+      return false;
+    }
+  }
+  if (divisionName == "Capital" || divisionName == "Motriz"){
+    if (selectedChoiceImporteCombustible == null) {
+      _showErrorDialog("Debe seleccionar un Importe de Combustible.");
+      return false;
+    }
+  }
+  if (divisionName == "BB (Staff:AS, CSC, Auditoria)"){
+    if (selectedChoiceUbicacionFisica == null) {
+      _showErrorDialog("Debe seleccionar una Ubicación Física.");
+      return false;
+    }
+  }
+   if (divisionName != "BB (Staff:AS, CSC, Auditoria)" && divisionName != "Motriz"){
+    if (textUbicacionFisica == null) {
+      _showErrorDialog("Debe rellenar el campo de Ubicación Física.");
+      return false;
+    }
+  }
+  if (divisionName == "Motriz"){
+    if (textOrganizacionFilial == null) {
+      _showErrorDialog("Debe rellenar el campo de Organización (Filial-Sucursal-Depto).");
+      return false;
+    }
+    if (selectedChoiceCajaSocio== null) {
+      _showErrorDialog("Debe seleccionar la caja a la cual pertenece el Socio.");
+      return false;
+    }
   }
   return true; 
 }
@@ -151,7 +198,7 @@ Widget build(BuildContext context) {
               overflow: TextOverflow.visible,
             ),
           ),
-          if (divisionName != "Motriz")
+          if (divisionName != "Capital" || divisionName != "Motriz")
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el valor según tus necesidades
             child: Image.asset(
@@ -159,7 +206,7 @@ Widget build(BuildContext context) {
               fit: BoxFit.scaleDown,
             ),
           ),
-          if (divisionName != "Motriz")
+          if (divisionName == "Capital")
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el valor según tus necesidades
             child: Image.asset(
@@ -279,6 +326,7 @@ Widget build(BuildContext context) {
               });
             },
           ),
+          if (divisionName == "BB (Staff:AS, CSC, Auditoria)")
           CustomDropdownFormField(
             hintText: "  Ubicación Física",
             value: selectedChoiceUbicacionFisica,
@@ -295,6 +343,7 @@ Widget build(BuildContext context) {
               });
             },
           ),
+          if (divisionName != "BB (Staff:AS, CSC, Auditoria)" && divisionName != "Motriz")
           Padding(
             padding: EdgeInsets.all(6), // Ajusta el valor para cambiar el espacio
             child: TextField(
@@ -309,6 +358,7 @@ Widget build(BuildContext context) {
               },
             ),
           ),
+          if (divisionName == "Motriz")
           Padding(
             padding: EdgeInsets.all(6), // Ajusta el valor para cambiar el espacio
             child: TextField(
@@ -323,6 +373,7 @@ Widget build(BuildContext context) {
               },
             ),
           ),
+          if (divisionName == "Motriz")
           CustomDropdownFormField(
             hintText: "  Valide la caja a la cual pertenece el Socio",
             value: selectedChoiceCajaSocio,
@@ -339,6 +390,7 @@ Widget build(BuildContext context) {
               });
             },
           ),
+          
           CustomDropdownFormField(
             hintText: "  Importe Combustible",
             value: selectedChoiceImporteCombustible,
@@ -355,6 +407,7 @@ Widget build(BuildContext context) {
               });
             },
           ),
+          if (divisionName == "Capital" || divisionName == "Motriz")
           Padding(
             padding: EdgeInsets.all(6), // Ajusta el valor para cambiar el espacio
             child: TextField(
@@ -369,7 +422,9 @@ Widget build(BuildContext context) {
               },
             ),
           ),
+          if (divisionName != "Capital" && divisionName != "Motriz")
           CustomDividerComponent(text: "Contabilidad AX"),
+          if (divisionName != "Capital" && divisionName != "Motriz")
           CustomDropdownFormField(
             hintText: "  Sucursal AX",
             value: selectedSucursalAX,
@@ -386,6 +441,24 @@ Widget build(BuildContext context) {
               });
             },
           ),
+          if (divisionName != "Capital" && divisionName != "Motriz")
+            CustomDropdownFormField(
+            hintText: "  Area AX",
+            value: selectedAreaAX,
+            items: (widget.catalogos[0].areaAX ?? [])
+                .where((areaAX) => areaAX.bc_name != null && areaAX.bc_vareaaxid != null)
+                .map((areaAX) => DropdownItem<String>(
+                      value: areaAX.bc_vareaaxid!, // El ID del área AX
+                      label: areaAX.bc_name!, // El nombre del área AX
+                    ))
+                .toList(),
+            onChanged: (String? value) {
+              setState(() {
+                selectedAreaAX = value; // Aquí `value` será el ID seleccionado
+              });
+            },
+          ),
+          if (divisionName != "Capital" && divisionName != "Motriz")
           CustomDropdownFormField(
             hintText: "  Departamento AX",
             value: selectedDepartamentoAX,
@@ -402,38 +475,7 @@ Widget build(BuildContext context) {
               });
             },
           ),
-          CustomDropdownFormField(
-            hintText: "  Linea de Producción AX",
-            value: selectedLineaProduccionAX,
-            items: (widget.catalogos[0].lineaProduccionAX ?? [])
-                .where((lineaProduccionAX) => lineaProduccionAX.bc_name != null && lineaProduccionAX.bc_vlineaproduccionaxid != null)
-                .map((lineaProduccionAX) => DropdownItem<String>(
-                      value: lineaProduccionAX.bc_vlineaproduccionaxid!, // El ID de la línea de producción AX
-                      label: lineaProduccionAX.bc_name!, // El nombre de la línea de producción AX
-                    ))
-                .toList(),
-            onChanged: (String? value) {
-              setState(() {
-                selectedLineaProduccionAX = value; // Aquí `value` será el ID seleccionado
-              });
-            },
-          ),
-          CustomDropdownFormField(
-            hintText: "  Area AX",
-            value: selectedAreaAX,
-            items: (widget.catalogos[0].areaAX ?? [])
-                .where((areaAX) => areaAX.bc_name != null && areaAX.bc_vareaaxid != null)
-                .map((areaAX) => DropdownItem<String>(
-                      value: areaAX.bc_vareaaxid!, // El ID del área AX
-                      label: areaAX.bc_name!, // El nombre del área AX
-                    ))
-                .toList(),
-            onChanged: (String? value) {
-              setState(() {
-                selectedAreaAX = value; // Aquí `value` será el ID seleccionado
-              });
-            },
-          ),
+          if (divisionName != "Capital" && divisionName != "Motriz")
           CustomDropdownFormField(
             hintText: "  Centro de Costos AX",
             value: selectedCentroCostosAX,
@@ -447,6 +489,23 @@ Widget build(BuildContext context) {
             onChanged: (String? value) {
               setState(() {
                 selectedCentroCostosAX = value; // Aquí `value` será el ID seleccionado
+              });
+            },
+          ),
+          if (divisionName != "Capital" && divisionName != "Motriz")
+          CustomDropdownFormField(
+            hintText: "  Linea de Producción AX",
+            value: selectedLineaProduccionAX,
+            items: (widget.catalogos[0].lineaProduccionAX ?? [])
+                .where((lineaProduccionAX) => lineaProduccionAX.bc_name != null && lineaProduccionAX.bc_vlineaproduccionaxid != null)
+                .map((lineaProduccionAX) => DropdownItem<String>(
+                      value: lineaProduccionAX.bc_vlineaproduccionaxid!, // El ID de la línea de producción AX
+                      label: lineaProduccionAX.bc_name!, // El nombre de la línea de producción AX
+                    ))
+                .toList(),
+            onChanged: (String? value) {
+              setState(() {
+                selectedLineaProduccionAX = value; // Aquí `value` será el ID seleccionado
               });
             },
           ),
