@@ -51,7 +51,7 @@ class _CustomDropdownFormFieldState<T> extends State<CustomDropdownFormField<T>>
             isExpanded: true,
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Seleccione',
+              hintText: ' Seleccione',
               hintStyle: TextStyle(
                 color: Color.fromARGB(255, 0, 0, 0),
               ),

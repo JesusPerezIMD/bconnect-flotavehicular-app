@@ -17,25 +17,28 @@ class QuestionsView extends StatefulWidget {
 
 class _QuestionsViewState extends State<QuestionsView> {
 
-  int selectedTerminosAsignacion = 0;
   String? divisionName;
+  int? selectedTerminosAsignacion = 0;
   String? selectedDH;
   String? selectedEmpresaNomina;  
   String? selectedEmpresaServicios; 
   String? selectedTipoNomina; 
   String? selectedDepartamento; 
   String? selectedSucursalNominal; 
-  String? selectedPuestoAsignado; 
+  String? selectedPuestoAsignado;
+  String? selectedChoiceUbicacionFisica;
+  String? textUbicacionFisica = "";
+  String? textOrganizacionFilial = "";
+  String? selectedChoiceCajaSocio;
+  String? selectedChoiceImporteCombustible;
+  String? textImporteCombustible = "";
   String? selectedSucursalAX;
-  String? selectedDepartamentoAX;
-  String? selectedLineaProduccionAX;
   String? selectedAreaAX;
+  String? selectedDepartamentoAX;
   String? selectedCentroCostosAX;
+  String? selectedLineaProduccionAX;
   String? selectedImporteAsignado;
   String? selectedTopeAsignado;
-  String? selectedChoiceUbicacionFisica;
-  String textUbicacionFisica = "";
-  String? selectedChoiceImporteCombustible;
 
   @override
   void initState() {
@@ -199,7 +202,7 @@ Widget build(BuildContext context) {
             },
           ),
           CustomDropdownFormField(
-            hintText: "  Ubicacion Fisica",
+            hintText: "  Ubicación Física",
             value: selectedChoiceUbicacionFisica,
             items: (widget.catalogos[0].choices ?? [])
                 .where((ubiFisicaId) => ubiFisicaId.columnname == "bc_ubicacionfisica") // Filtrar por "bc_ubicacionfisica"
@@ -228,6 +231,36 @@ Widget build(BuildContext context) {
               },
             ),
           ),
+          Padding(
+            padding: EdgeInsets.all(6), // Ajusta el valor para cambiar el espacio
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Organización (Filial-Sucursal-Depto)',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  textOrganizacionFilial = value;
+                });
+              },
+            ),
+          ),
+          CustomDropdownFormField(
+            hintText: "  Valide la caja a la cual pertenece el Socio",
+            value: selectedChoiceCajaSocio,
+            items: (widget.catalogos[0].choices ?? [])
+                .where((cajaSocio) => cajaSocio.columnname == "bc_cajasocio") // Filtrar por "bc_ubicacionfisica"
+                .map((cajaSocio) => DropdownItem<String>(
+                      value: cajaSocio.choicevalue!, // Usar "choicevalue" como valor
+                      label: cajaSocio.choicename!, // Usar "choicename" como etiqueta
+                    ))
+                .toList(),
+            onChanged: (String? value) {
+              setState(() {
+                selectedChoiceCajaSocio = value; // Aquí `value` será el ID seleccionado
+              });
+            },
+          ),
           CustomDropdownFormField(
             hintText: "  Importe Combustible",
             value: selectedChoiceImporteCombustible,
@@ -243,6 +276,20 @@ Widget build(BuildContext context) {
                 selectedChoiceImporteCombustible = value; // Aquí `value` será el ID seleccionado
               });
             },
+          ),
+          Padding(
+            padding: EdgeInsets.all(6), // Ajusta el valor para cambiar el espacio
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Importe Combustible',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  textImporteCombustible = value;
+                });
+              },
+            ),
           ),
           CustomDividerComponent(text: "Contabilidad AX"),
           CustomDropdownFormField(
@@ -370,6 +417,7 @@ Widget build(BuildContext context) {
                       bcAsignacionVehiculoId: selectedEncuesta.bc_asignacionvehiculoid,
                       bcTerminosAsignacionVehiculo: selectedTerminosAsignacion,
                       bcVdh: selectedDH,
+                      bcVdh2: selectedDH,
                       bcVEmpresaNominista: selectedEmpresaNomina,
                       bcVEmpresaServicios: selectedEmpresaServicios,
                       bcVTipoNomina: selectedTipoNomina,
@@ -378,13 +426,18 @@ Widget build(BuildContext context) {
                       bcVPuesto: selectedPuestoAsignado,
                       bcUbicacionFisica: selectedChoiceUbicacionFisica,
                       bcUbicacionFisicaOtros: textUbicacionFisica,
+                      bcOrganizacionFilial: textOrganizacionFilial,
+                      bcCajaSocio: selectedChoiceCajaSocio,
                       bcImporteCombustible: selectedChoiceImporteCombustible,
+                      bcImporteCombustibleOtros: textImporteCombustible,
                       bcVSucursalAx: selectedSucursalAX,
                       bcVAreaAx: selectedAreaAX,
                       bcVDepartamentoAx: selectedDepartamentoAX,
                       bcVCentroCostosAx: selectedCentroCostosAX,
                       bcVLineaProduccionAx: selectedLineaProduccionAX,
                       bcVImporteAsignado: selectedImporteAsignado,
+                      bcVTopeAsignado: selectedTopeAsignado,
+                      
                     );
 
                     try {

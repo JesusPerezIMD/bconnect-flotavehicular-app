@@ -198,7 +198,7 @@ class BConnectService {
         'bc_lineaproduccionaxotras': registros.bcLineaProduccionAxOtras ?? "",
         'bc_vlineaproduccionax': registros.bcVLineaProduccionAx ?? "",
         'bc_vimporteasignado': registros.bcVImporteAsignado ?? "",
-        'bc_importeasignadootros': registros.bcImporteAsignadoOtros ?? "",
+        'bc_vtopeasignado': registros.bcVTopeAsignado ?? "",
       });
 
       // Imprimir el cuerpo de la solicitud

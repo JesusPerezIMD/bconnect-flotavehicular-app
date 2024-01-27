@@ -35,7 +35,7 @@ class CreateRegistros {
   String? bcLineaProduccionAxOtras;
   String? bcVLineaProduccionAx;
   String? bcVImporteAsignado;
-  String? bcImporteAsignadoOtros;
+  String? bcVTopeAsignado;
 
   CreateRegistros({
     this.bcAsignacionVehiculoId,
@@ -74,6 +74,6 @@ class CreateRegistros {
     this.bcLineaProduccionAxOtras,
     this.bcVLineaProduccionAx,
     this.bcVImporteAsignado,
-    this.bcImporteAsignadoOtros,
+    this.bcVTopeAsignado,
   });
 }
