@@ -104,7 +104,8 @@ Widget build(BuildContext context) {
               });
             },
           ),
-        CustomDividerComponent(text: "Datos generales del ejecutivo"),
+        CustomDividerComponent(text: "Datos generales del ejecutivo"),  
+Image.asset('assets/DGE1.png'),
           CustomDropdownFormField<String>(
             hintText: "  Empresa donde nomina",
             value: selectedEmpresaNomina,
