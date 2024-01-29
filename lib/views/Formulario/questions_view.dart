@@ -53,7 +53,9 @@ bool isValid() {
 
   if (selectedEmpresaNomina == null) errorMessages.add("Debe seleccionar una Empresa Nominista.");
   if (selectedEmpresaServicios == null) errorMessages.add("Debe seleccionar una Empresa que presta Servicios.");
-  if (selectedTipoNomina == null) errorMessages.add("Debe seleccionar un Tipo de Nomina.");
+  if (divisionName != "Motriz") {
+    if (selectedTipoNomina == null) errorMessages.add("Debe seleccionar un Tipo de Nomina.");
+  }
   if (selectedDepartamento == null) errorMessages.add("Debe seleccionar un Departamento.");
   if (selectedSucursalNominal == null) errorMessages.add("Debe seleccionar una Sucursal Nominal.");
   if (selectedPuestoAsignado == null) errorMessages.add("Debe seleccionar un Puesto Asignado.");
@@ -70,7 +72,7 @@ bool isValid() {
   }
 
   if (divisionName == "Capital" || divisionName == "Motriz") {
-    if (textImporteCombustible == null) errorMessages.add("Debe rellenar el campo de Importe de Combustible.");
+    if (textImporteCombustible?.isEmpty ?? true) errorMessages.add("Debe rellenar el campo de Importe de Combustible.");
   }
 
   if (divisionName == "Motriz") {
@@ -201,7 +203,7 @@ Widget build(BuildContext context) {
               overflow: TextOverflow.visible,
             ),
           ),
-          if (divisionName != "Capital" || divisionName != "Motriz")
+          if (divisionName != "Capital" && divisionName != "Motriz")
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8), // Ajusta el valor según tus necesidades
             child: Image.asset(
@@ -211,7 +213,7 @@ Widget build(BuildContext context) {
           ),
           if (divisionName == "Capital")
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8), // Agrega una coma (,) entre los valores
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4), // Agrega una coma (,) entre los valores
             child: Image.asset(
               'assets/DGE2.png',
               fit: BoxFit.scaleDown,
@@ -403,7 +405,7 @@ Widget build(BuildContext context) {
               });
             },
           ),
-          
+          if (divisionName != "Capital" && divisionName != "Motriz")
           CustomDropdownFormField(
             hintText: "  Importe Combustible",
             value: selectedChoiceImporteCombustible,
