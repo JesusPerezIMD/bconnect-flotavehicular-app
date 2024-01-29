@@ -136,9 +136,9 @@ void _showErrorDialog(String message) {
 @override
 Widget build(BuildContext context) {
   String appBarTitle = "Preguntas - Sin Folio";
-
-  // ... (código anterior omitido)
-
+  if (widget.encuestasOne.isNotEmpty) {
+    appBarTitle = "Folio: ${widget.encuestasOne[0].bc_folio}";
+  }
   return Scaffold(
     appBar: AppBar(
       title: Text(appBarTitle),
@@ -203,7 +203,7 @@ Widget build(BuildContext context) {
           ),
           if (divisionName != "Capital" || divisionName != "Motriz")
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el valor según tus necesidades
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8), // Ajusta el valor según tus necesidades
             child: Image.asset(
               'assets/DGE1.png',
               fit: BoxFit.scaleDown,
@@ -211,7 +211,7 @@ Widget build(BuildContext context) {
           ),
           if (divisionName == "Capital")
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el valor según tus necesidades
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8), // Agrega una coma (,) entre los valores
             child: Image.asset(
               'assets/DGE2.png',
               fit: BoxFit.scaleDown,
@@ -219,7 +219,7 @@ Widget build(BuildContext context) {
           ),
           if (divisionName != "Motriz")
           Padding(
-            padding: EdgeInsets.only(left: 16.0), // Agrega padding solo al lado izquierdo
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8), // Agrega padding solo al lado izquierdo
             child: Align(
               alignment: Alignment.centerLeft, // Alinea el contenido a la izquierda
               child: Switch(
@@ -349,31 +349,41 @@ Widget build(BuildContext context) {
           if (divisionName != "BB (Staff:AS, CSC, Auditoria)" && divisionName != "Motriz")
           Padding(
             padding: EdgeInsets.all(6), // Ajusta el valor para cambiar el espacio
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Ubicación Física',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  textUbicacionFisica = value;
-                });
-              },
+            child: Column(
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Ubicación Física',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      textUbicacionFisica = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 8), // Agrega un espacio adicional debajo del TextField
+              ],
             ),
           ),
           if (divisionName == "Motriz")
           Padding(
             padding: EdgeInsets.all(6), // Ajusta el valor para cambiar el espacio
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Organización (Filial-Sucursal-Depto)',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  textOrganizacionFilial = value;
-                });
-              },
+            child: Column(
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Organización (Filial-Sucursal-Depto)',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      textOrganizacionFilial = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 8), // Agrega un espacio adicional debajo del TextField
+              ],
             ),
           ),
           if (divisionName == "Motriz")
@@ -413,16 +423,21 @@ Widget build(BuildContext context) {
           if (divisionName == "Capital" || divisionName == "Motriz")
           Padding(
             padding: EdgeInsets.all(6), // Ajusta el valor para cambiar el espacio
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Importe Combustible',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  textImporteCombustible = value;
-                });
-              },
+            child: Column(
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Importe Combustible',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      textImporteCombustible = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 8), // Agrega un espacio adicional debajo del TextField
+              ],
             ),
           ),
           if (divisionName != "Capital" && divisionName != "Motriz")
