@@ -170,7 +170,7 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
         ? encuestas.map((item) {
             return DropdownMenuItem(
               value: item,
-              child: Text(item.bc_folio.toString()),
+              child: Text(item.bc_folio.toString()+" - "+item.bc_vdivisionname.toString()),
             );
           }).toList()
         : [DropdownMenuItem(
