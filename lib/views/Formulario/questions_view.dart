@@ -133,8 +133,6 @@ void _showErrorDialog(String message) {
     }
   }
 
-
-
 @override
 Widget build(BuildContext context) {
   String appBarTitle = "Preguntas - Sin Folio";
