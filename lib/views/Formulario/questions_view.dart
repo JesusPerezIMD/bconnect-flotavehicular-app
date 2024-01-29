@@ -108,7 +108,7 @@ void _showErrorDialog(String message) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text('Error'),
+      title: Text('AVISO'),
       content: Text(message),
       actions: [
         TextButton(
@@ -133,19 +133,23 @@ void _showErrorDialog(String message) {
     }
   }
 
+
+
 @override
 Widget build(BuildContext context) {
   String appBarTitle = "Preguntas - Sin Folio";
 
-  if (widget.encuestasOne.isNotEmpty) {
-    appBarTitle = "Folio: ${widget.encuestasOne[0].bc_folio}";
-  }
+  // ... (código anterior omitido)
+
   return Scaffold(
     appBar: AppBar(
       title: Text(appBarTitle),
     ),
-    body: ListView(
+    body: Column(
       children: <Widget>[
+        Expanded(
+          child: ListView(
+            children: <Widget>[
         ListTile(
             title: Text(
               style: TextStyle(
@@ -543,8 +547,11 @@ Widget build(BuildContext context) {
               });
             },
           ), 
+            ],
+          ),
+        ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
@@ -607,8 +614,8 @@ Widget build(BuildContext context) {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 }
