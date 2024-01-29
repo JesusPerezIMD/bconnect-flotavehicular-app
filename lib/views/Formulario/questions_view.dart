@@ -42,65 +42,66 @@ class _QuestionsViewState extends State<QuestionsView> {
   String? selectedTopeAsignado;
 
 bool isValid() {
-  // Valida si el campo asociado a 'divisionName' diferente de "Motriz" es visible y requerido
+  List<String> errorMessages = [];
+
+  if (selectedTerminosAsignacion != 1) errorMessages.add("Debe confirmar los terminos de asignación.");
+  if (selectedDH == null) errorMessages.add("Debe seleccionar un DH Responsable.");
+
   if (divisionName != "Motriz") {
-    if (selectedImagenDatosRequeridos != 1) {
-      _showErrorDialog("Debe confirmar la imagen de datos requeridos para su división.");
-      return false;
-    }
+    if (selectedImagenDatosRequeridos != 1) errorMessages.add("Debe confirmar la imagen de datos requeridos para su división.");
   }
+
+  if (selectedEmpresaNomina == null) errorMessages.add("Debe seleccionar una Empresa Nominista.");
+  if (selectedEmpresaServicios == null) errorMessages.add("Debe seleccionar una Empresa que presta Servicios.");
+  if (selectedTipoNomina == null) errorMessages.add("Debe seleccionar un Tipo de Nomina.");
+  if (selectedDepartamento == null) errorMessages.add("Debe seleccionar un Departamento.");
+  if (selectedSucursalNominal == null) errorMessages.add("Debe seleccionar una Sucursal Nominal.");
+  if (selectedPuestoAsignado == null) errorMessages.add("Debe seleccionar un Puesto Asignado.");
+
+  if (divisionName != "BB (Staff:AS, CSC, Auditoria)" && divisionName != "Motriz") {
+    if (textUbicacionFisica?.isEmpty ?? true) errorMessages.add("Debe rellenar el campo de Ubicación Física.");
+  }
+  if (divisionName == "BB (Staff:AS, CSC, Auditoria)") {
+    if (selectedChoiceUbicacionFisica == null) errorMessages.add("Debe seleccionar una Ubicación Física.");
+  }
+
   if (divisionName != "Capital" && divisionName != "Motriz") {
-    // Verifica cada campo individualmente
-    if (selectedSucursalAX == null) {
-      _showErrorDialog("Debe seleccionar una sucursal de AX.");
-      return false;
-    }
-    if (selectedAreaAX == null) {
-      _showErrorDialog("Debe seleccionar un área de AX.");
-      return false;
-    }
-    if (selectedDepartamentoAX == null) {
-      _showErrorDialog("Debe seleccionar un departamento de AX.");
-      return false;
-    }
-    if (selectedCentroCostosAX == null) {
-      _showErrorDialog("Debe seleccionar un centro de costos de AX.");
-      return false;
-    }
-    if (selectedLineaProduccionAX == null) {
-      _showErrorDialog("Debe seleccionar una línea de producción de AX.");
-      return false;
-    }
+    if (selectedChoiceImporteCombustible == null) errorMessages.add("Debe seleccionar un Importe de Combustible.");
   }
-  if (divisionName == "Capital" || divisionName == "Motriz"){
-    if (selectedChoiceImporteCombustible == null) {
-      _showErrorDialog("Debe seleccionar un Importe de Combustible.");
-      return false;
-    }
+
+  if (divisionName == "Capital" || divisionName == "Motriz") {
+    if (textImporteCombustible == null) errorMessages.add("Debe rellenar el campo de Importe de Combustible.");
   }
-  if (divisionName == "BB (Staff:AS, CSC, Auditoria)"){
-    if (selectedChoiceUbicacionFisica == null) {
-      _showErrorDialog("Debe seleccionar una Ubicación Física.");
-      return false;
-    }
+
+  if (divisionName == "Motriz") {
+    if (textOrganizacionFilial?.isEmpty ?? true) errorMessages.add("Debe rellenar el campo de Organización (Filial-Sucursal-Depto).");
+    if (selectedChoiceCajaSocio == null) errorMessages.add("Debe seleccionar la Caja a la cual pertenece el Socio.");
   }
-   if (divisionName != "BB (Staff:AS, CSC, Auditoria)" && divisionName != "Motriz"){
-    if (textUbicacionFisica == null) {
-      _showErrorDialog("Debe rellenar el campo de Ubicación Física.");
-      return false;
-    }
+
+  if (divisionName != "Capital" && divisionName != "Motriz") {
+    if (selectedSucursalAX == null) errorMessages.add("Debe seleccionar una Sucursal de AX.");
+    if (selectedAreaAX == null) errorMessages.add("Debe seleccionar un Área de AX.");
+    if (selectedDepartamentoAX == null) errorMessages.add("Debe seleccionar un Departamento de AX.");
+    if (selectedCentroCostosAX == null) errorMessages.add("Debe seleccionar un Centro de Costos de AX.");
+    if (selectedLineaProduccionAX == null) errorMessages.add("Debe seleccionar una Línea de Producción de AX.");
   }
-  if (divisionName == "Motriz"){
-    if (textOrganizacionFilial == null) {
-      _showErrorDialog("Debe rellenar el campo de Organización (Filial-Sucursal-Depto).");
-      return false;
-    }
-    if (selectedChoiceCajaSocio== null) {
-      _showErrorDialog("Debe seleccionar la caja a la cual pertenece el Socio.");
-      return false;
-    }
+
+  if (selectedImporteAsignado == null) errorMessages.add("Debe seleccionar un Importe Asignado.");
+  if (selectedTopeAsignado == null) errorMessages.add("Debe seleccionar un Tope Asignado.");
+
+  if (errorMessages.isNotEmpty) {
+    // Convierte cada mensaje de error en un mensaje numerado
+    String numberedErrors = errorMessages
+        .asMap()
+        .map((i, msg) => MapEntry(i, "${i + 1}. $msg")) // Añade el número delante del mensaje
+        .values
+        .join('\n'); // Une los mensajes con saltos de línea
+
+    _showErrorDialog(numberedErrors); // Muestra los errores numerados
+    return false;
   }
-  return true; 
+
+  return true;
 }
 
 void _showErrorDialog(String message) {
