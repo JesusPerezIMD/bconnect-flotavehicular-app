@@ -32,7 +32,7 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
   String codemp ='';
 
   Future<void> getForms(String colaboradorid) async {
-    var result = await BConnectService().getForms(colaboradorid);
+    var result = await BConnectService().getFormsHistory(colaboradorid);
     if (mounted) {
       setState(() {
         if (result.isNotEmpty) {

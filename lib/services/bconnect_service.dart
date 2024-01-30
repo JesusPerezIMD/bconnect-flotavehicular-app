@@ -114,7 +114,12 @@ class BConnectService {
       if (response.statusCode == 200) {
         final List<dynamic> result = jsonDecode(response.body);
         for (var data in result) {
-          solicitudList.add(getSolicitud.fromJson(data));
+          getSolicitud solicitud = getSolicitud.fromJson(data);
+          
+          // Aquí agregamos una condición para filtrar los resultados
+          if (solicitud.bc_terminosasignacionvehiculo == false) {
+            solicitudList.add(solicitud);
+          }
         }
       }
       return solicitudList;
@@ -123,7 +128,30 @@ class BConnectService {
     }
   }
 
-    Future<List<getOneSolicitud>> getOneForms(String id) async {
+  Future<List<getSolicitud>> getFormsHistory(String userid) async {
+    try {
+      List<getSolicitud> solicitudList = [];
+      final response = await http.get(
+          Uri.parse('$apiUrl/FlotaVehicular/getSolicitud?empCode=$userid'),
+          headers: {'Content-Type': 'application/json; charset=UTF-8'});
+      if (response.statusCode == 200) {
+        final List<dynamic> result = jsonDecode(response.body);
+        for (var data in result) {
+          getSolicitud solicitud = getSolicitud.fromJson(data);
+          
+          // Aquí agregamos una condición para filtrar los resultados
+          if (solicitud.bc_terminosasignacionvehiculo == true) {
+            solicitudList.add(solicitud);
+          }
+        }
+      }
+      return solicitudList;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<List<getOneSolicitud>> getOneForms(String id) async {
     try {
       List<getOneSolicitud> solicitudOneList = [];
       final response = await http.get(
